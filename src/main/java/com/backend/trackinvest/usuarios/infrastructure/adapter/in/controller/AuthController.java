@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
@@ -20,6 +19,7 @@ import java.util.Base64;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
+
 
 //    private final RegisterUserPort registerUserUseCase;
 //    private final AutenticateUserPort loginUserUseCase;
@@ -41,8 +41,9 @@ public class AuthController {
                 "/oauth2/authorize?" +
                 "response_type=code" +
                 "&client_id=" + clientId +
-                "&redirect_uri=http://localhost:4200/auth/idpresponse" +
+                "&redirect_uri=http://localhost:8081/oauth2/idpresponse" +
                 "&scope=email+openid+profile";
+        System.out.println("Generated URL: " + url);
         return ResponseEntity.ok(new UrlDTO(url));
     }
 
@@ -53,7 +54,7 @@ public class AuthController {
                 "grant_type=authorization_code" +
                 "&client_id=" + clientId +
                 "&code=" + code +
-                "&redirect_uri=http://localhost:4200/auth/idpresponse";
+                "&redirect_uri=http://localhost:8081/oauth2/idpresponse";
         String authInfo = clientId + ":" + clientSecret;
         String basicAuth = Base64.getEncoder().encodeToString(authInfo.getBytes());
 
@@ -85,6 +86,7 @@ public class AuthController {
 
         CognitoTokenResponseDTO token = MAPPER.readValue(response.body(), CognitoTokenResponseDTO.class);
 
+        System.out.println("Received token: " + token.id_token());
         return ResponseEntity.ok(new TokenDTO(token.id_token()));
     }
 

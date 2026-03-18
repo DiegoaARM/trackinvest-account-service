@@ -1,6 +1,5 @@
 package com.backend.trackinvest.usuarios.infrastructure.adapter.in.controller;
 
-import com.auth0.jwt.JWT;
 import com.backend.trackinvest.usuarios.application.ports.in.dto.MessageDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

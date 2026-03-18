@@ -46,6 +46,7 @@ DOCUMENTACIÓN AWS COGNITO
                 - Client Secret: el que generamos en el paso 1.
                 - ambitos autorizados(scopes): "email openid profile"
             - Ir a clientes de aplicación, páginas de inicio de sesión y editar Ámbitos de OpenId connect: eleminar phone y agregar profile
+            - Agregar además en sign-out url https://localhost:8081/login
 
 5. RELLENAMOS LA INFORMACIÓN EN EL APPLICATION.PROPERTIES:
             - spring.security.oauth2.resourceserver.jwt.jwk-set-uri={URL de clave de firma de token}
