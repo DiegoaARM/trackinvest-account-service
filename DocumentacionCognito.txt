@@ -1,0 +1,61 @@
+=============================================
+DOCUMENTACIÓN AWS COGNITO
+=============================================
+
+1. CREAR UN CLIENTE DE APLICACIÓN EN GCP. HACER CLICK EN API & SERVICES > OAUTH CONSENT SCREEN > CREATE PROYECT:
+            - Nombre del proyecto: TrackInvestApi
+            - Correo electrónico del soporte: diegoaarm.dev@gmail.com
+            - Tipo de usuario: Externo
+            - Crear.
+
+            - Agregar Usuarios de prueba.
+            - Agregar scopes: email, profile, openid.
+
+        IR A API & SERVICES > CREDENTIALS > CREATE CREDENTIALS > OAUTH CLIENT ID:
+            - Tipo de aplicación: Web application
+            - Nombre: cognito-client
+            - Authorized JavaScript origins: https://cognito-idp.us-east-1.amazonaws.com
+            - Authorized redirect URIs: https://cognito-idp.us-east-1.amazonaws.com/oauth2/idpresponse
+            - Crear.
+
+2. CONFIGURAR SPRINGBOOT. AGREGAR DEPENDENCIAS DE SPRING SECURITY Y OAUTH2 RESOURCE SERVER EN EL POM.XML.:
+            - Crear un PublicController y un PrivateController para la prueba.
+            - Configurar el SecurityConfig. Agregar la función CorsCofuiguration cors.
+            - En SecurityConfig agregar la función SecurityFilterChain security para configurar las rutas públicas y privadas.
+            - En el application.properties agregar las siguientes propiedades que luego completaremos:
+                spring.security.oauth2.resourceserver.jwt.jwk-set-uri=
+                spring.security.oauth2.resourceserver.jwt.issuer-uri=
+                spring.security.oauth2.resourceserver.jwt.clientId=
+                spring.security.oauth2.resourceserver.jwt.clientSecret=
+                auth.cognitoUri=
+
+3. CONFIGURAR AUTHCONTROLLER DE AWS COGNITO:
+            - Crear un AuthController con la función url que se encargará de generar la url que usará el front para acceder
+                a través de cognito. Para esto usaremos las variables cognitoUri, clientId y clientSecret que configuramos
+                en el application.properties.
+            - Crear la función callback que se encargará de validar el token.
+
+4. CONFIGURAR AWS COGNITO. PARA ESTO CREAREMOS UNA USERPOOL EN AWS COGNITO:
+            - Aplicación web tradicional
+            - Crear un User Pool con el nombre TrackInvestApi.
+            - Opciones de login: Email, name
+            - Url de redirección: http://localhost:4200/oauth2/idpresponse
+            - Después de creado ir a administrar proveedores:
+                - Agregar un nuevo proveedor de identidad: Google
+                - Client ID: el que generamos en el paso 1.
+                - Client Secret: el que generamos en el paso 1.
+                - ambitos autorizados(scopes): "email openid profile"
+            - Ir a clientes de aplicación, páginas de inicio de sesión y editar Ámbitos de OpenId connect: eleminar phone y agregar profile
+            - Agregar además en sign-out url https://localhost:8081/login
+
+5. RELLENAMOS LA INFORMACIÓN EN EL APPLICATION.PROPERTIES:
+            - spring.security.oauth2.resourceserver.jwt.jwk-set-uri={URL de clave de firma de token}
+            - spring.security.oauth2.resourceserver.jwt.issuer-uri={URL del emisor del token menos lo ultimo desde well-known}
+            - spring.security.oauth2.resourceserver.jwt.clientId={ir a clientes de aplicación y client id}
+            - spring.security.oauth2.resourceserver.jwt.clientSecret={ir a clientes de aplicación y client secret}
+            - auth.cognitoUri={ir a dominio y cognito domain}
+
+6. TERMINAR DE CONFIGURAR GCP. IR A API & SERVICES > CREDENTIALS:
+            - Agregar a Origenes autorizados js: {cognito_domain}
+            - Agregar a URIs de redireccionamiento autorizados: {cognito_domain}/oauth2/idpresponse
+
