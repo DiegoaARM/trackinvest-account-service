@@ -24,6 +24,7 @@ public interface UserEntityMapper {
 
         return UserDomain.from(
                 entity.getId(),
+                entity.getCognito_id(),
                 new Name(entity.getFirstName(), entity.getMiddleName(), entity.getLastName(), entity.getSecondLastName()),
                 new Email(entity.getEmail()),
                 new Password(entity.getPassword()),

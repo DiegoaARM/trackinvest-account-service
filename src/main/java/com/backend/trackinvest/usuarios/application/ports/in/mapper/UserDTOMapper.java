@@ -14,15 +14,6 @@ import java.util.UUID;
 @Mapper(componentModel = "spring")
 public interface UserDTOMapper {
 
-    default UserDomain toDomain(RegisterUserDTO dto) {
-        return UserDomain.create(
-                UUID.randomUUID(),
-                mapName(dto),
-                new Email(dto.email()),
-                new Password(dto.password())
-        );
-    }
-
     @Mapping(target = "fullName", expression = "java(domain.getName().fullName())")
     @Mapping(target = "email", source = "email.value")
     public abstract GetUserDTO toDto(UserDomain domain);
