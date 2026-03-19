@@ -1,6 +1,6 @@
 package com.backend.trackinvest.usuarios.infrastructure.adapter.out.security;
 
-import com.backend.trackinvest.usuarios.application.ports.in.dto.CognitoTokenResponseDTO;
+import com.backend.trackinvest.usuarios.application.ports.in.dto.auth.CognitoTokenResponseDTO;
 import com.backend.trackinvest.usuarios.application.ports.out.IdentityProviderPort;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

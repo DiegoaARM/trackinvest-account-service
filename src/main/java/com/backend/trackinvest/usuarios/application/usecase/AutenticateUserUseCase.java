@@ -1,7 +1,7 @@
 //package com.backend.trackinvest.usuarios.application.usecase;
 //
 //import com.backend.trackinvest.usuarios.application.ports.in.dto.LoginDTO;
-//import com.backend.trackinvest.usuarios.application.ports.in.dto.AuthResponseDTO;
+//import com.backend.trackinvest.usuarios.application.ports.in.dto.auth.AuthResponseDTO;
 //import com.backend.trackinvest.usuarios.application.ports.in.service.AutenticateUserPort;
 //import com.backend.trackinvest.usuarios.application.ports.out.JwtProviderPort;
 //import com.backend.trackinvest.usuarios.application.ports.out.PasswordEncoderPort;

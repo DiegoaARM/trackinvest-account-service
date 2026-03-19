@@ -1,7 +1,7 @@
 package com.backend.trackinvest.usuarios.application.usecase;
 
-import com.backend.trackinvest.usuarios.application.ports.in.dto.TokenDTO;
-import com.backend.trackinvest.usuarios.application.ports.in.dto.UrlDTO;
+import com.backend.trackinvest.usuarios.application.ports.in.dto.auth.TokenDTO;
+import com.backend.trackinvest.usuarios.application.ports.in.dto.auth.UrlDTO;
 import com.backend.trackinvest.usuarios.application.ports.in.service.AuthPort;
 import com.backend.trackinvest.usuarios.application.ports.out.IdentityProviderPort;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,7 @@
 package com.backend.trackinvest.usuarios.infrastructure.adapter.in.controller;
 
-import com.backend.trackinvest.usuarios.application.ports.in.dto.*;
+import com.backend.trackinvest.usuarios.application.ports.in.dto.auth.TokenDTO;
+import com.backend.trackinvest.usuarios.application.ports.in.dto.auth.UrlDTO;
 import com.backend.trackinvest.usuarios.application.ports.in.service.AuthPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
