@@ -22,6 +22,9 @@ public class UserEntity {
     @Id
     private UUID id;
 
+    @Column(nullable = false, unique = true)
+    private String cognito_id;
+
     @Column(nullable = false, length = 25)
     private String firstName;
 
@@ -36,9 +39,6 @@ public class UserEntity {
 
     @Column(nullable = false, unique = true)
     private String email;
-
-    @Column(nullable = false)
-    private String password;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

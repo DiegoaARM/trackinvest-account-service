@@ -1,4 +1,4 @@
-package com.backend.trackinvest.usuarios.application.ports.in.dto;
+package com.backend.trackinvest.usuarios.application.ports.in.dto.auth;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
