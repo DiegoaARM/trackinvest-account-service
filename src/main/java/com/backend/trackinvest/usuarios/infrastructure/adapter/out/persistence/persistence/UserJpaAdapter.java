@@ -34,6 +34,12 @@ public class UserJpaAdapter implements UserRepositoryPort {
     }
 
     @Override
+    public Optional<UserDomain> findByCognitoId(String congitoId) {
+        return userRepository.findByCognitoId(congitoId)
+                .map(userEntityMapper::toDomain);
+    }
+
+    @Override
     public UserDomain save(UserDomain user) {
         return userEntityMapper.toDomain(
                 userRepository.save(
@@ -45,5 +51,10 @@ public class UserJpaAdapter implements UserRepositoryPort {
     @Override
     public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
+    }
+
+    @Override
+    public boolean existsByCognitoId(String cognitoId) {
+        return userRepository.existsByCognitoId(cognitoId);
     }
 }

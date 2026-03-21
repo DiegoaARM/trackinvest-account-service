@@ -22,8 +22,8 @@ public class UserEntity {
     @Id
     private UUID id;
 
-    @Column(nullable = false, unique = true)
-    private String cognito_id;
+    @Column(name = "cognito_id",nullable = false, unique = true)
+    private String cognitoId;
 
     @Column(nullable = false, length = 25)
     private String firstName;

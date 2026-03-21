@@ -15,6 +15,7 @@ public interface UserEntityMapper {
     @Mapping(target = "lastName", source = "name.lastName")
     @Mapping(target = "secondLastName", source = "name.secondLastName")
     @Mapping(target = "email", source = "email.value")
+    @Mapping(target = "cognitoId", source = "cognito_id")
     UserEntity toEntity(UserDomain domain);
 
     default UserDomain toDomain(UserEntity entity) {
@@ -22,7 +23,7 @@ public interface UserEntityMapper {
 
         return UserDomain.from(
                 entity.getId(),
-                entity.getCognito_id(),
+                entity.getCognitoId(),
                 new Name(entity.getFirstName(), entity.getMiddleName(), entity.getLastName(), entity.getSecondLastName()),
                 new Email(entity.getEmail()),
                 entity.getCreatedAt(),
