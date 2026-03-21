@@ -11,7 +11,11 @@ public interface UserRepositoryPort {
 
     Optional<UserDomain> findByEmail(String email);
 
+    Optional<UserDomain> findByCognitoId(String cognitoId);
+
     UserDomain save(UserDomain user);
 
     boolean existsByEmail(String email);
+
+    boolean existsByCognitoId(String cognitoId);
 }

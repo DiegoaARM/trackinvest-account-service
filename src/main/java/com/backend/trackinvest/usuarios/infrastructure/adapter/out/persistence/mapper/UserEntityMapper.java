@@ -2,7 +2,6 @@ package com.backend.trackinvest.usuarios.infrastructure.adapter.out.persistence.
 
 import com.backend.trackinvest.usuarios.domain.models.user.valueobjects.Email;
 import com.backend.trackinvest.usuarios.domain.models.user.valueobjects.Name;
-import com.backend.trackinvest.usuarios.domain.models.user.valueobjects.Password;
 import com.backend.trackinvest.usuarios.domain.models.user.UserDomain;
 import com.backend.trackinvest.usuarios.infrastructure.adapter.out.persistence.entity.UserEntity;
 import org.mapstruct.Mapper;
@@ -16,7 +15,7 @@ public interface UserEntityMapper {
     @Mapping(target = "lastName", source = "name.lastName")
     @Mapping(target = "secondLastName", source = "name.secondLastName")
     @Mapping(target = "email", source = "email.value")
-    @Mapping(target = "password", source = "password.value")
+    @Mapping(target = "cognitoId", source = "cognito_id")
     UserEntity toEntity(UserDomain domain);
 
     default UserDomain toDomain(UserEntity entity) {
@@ -24,9 +23,9 @@ public interface UserEntityMapper {
 
         return UserDomain.from(
                 entity.getId(),
+                entity.getCognitoId(),
                 new Name(entity.getFirstName(), entity.getMiddleName(), entity.getLastName(), entity.getSecondLastName()),
                 new Email(entity.getEmail()),
-                new Password(entity.getPassword()),
                 entity.getCreatedAt(),
                 entity.getUpdatedAt()
         );
