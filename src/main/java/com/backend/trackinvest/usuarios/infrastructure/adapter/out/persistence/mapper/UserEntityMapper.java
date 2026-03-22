@@ -15,7 +15,7 @@ public interface UserEntityMapper {
     @Mapping(target = "lastName", source = "name.lastName")
     @Mapping(target = "secondLastName", source = "name.secondLastName")
     @Mapping(target = "email", source = "email.value")
-    @Mapping(target = "cognitoId", source = "cognito_id")
+    @Mapping(target = "cognitoId", source = "cognitoId")
     UserEntity toEntity(UserDomain domain);
 
     default UserDomain toDomain(UserEntity entity) {

@@ -10,7 +10,7 @@ import java.util.UUID;
 public class UserDomain {
 
     private final UUID id;
-    private final String cognito_id;
+    private final String cognitoId;
     private Name name;
     private final Email email;
     private final LocalDateTime createdAt;
@@ -18,20 +18,20 @@ public class UserDomain {
 
     private UserDomain(UUID id, String cognitoId, Name name, Email email, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = Objects.requireNonNull(id, "ID is mandatory");
-        cognito_id = cognitoId;
+        this.cognitoId = Objects.requireNonNull(cognitoId, "Cognito ID is mandatory");
         this.name = Objects.requireNonNull(name, "Name is mandatory");
         this.email = Objects.requireNonNull(email, "Email is mandatory");
         this.createdAt = Objects.requireNonNull(createdAt);
         this.updatedAt = Objects.requireNonNull(updatedAt);
     }
 
-    public static UserDomain create(UUID id, String cognito_id, Name name, Email email) {
+    public static UserDomain create(UUID id, String cognitoId, Name name, Email email) {
         LocalDateTime ahora = LocalDateTime.now();
-        return new UserDomain(id, cognito_id, name, email, ahora, ahora);
+        return new UserDomain(id, cognitoId, name, email, ahora, ahora);
     }
 
-    public static UserDomain from(UUID id, String cognito_id, Name name, Email email, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        return new UserDomain(id, cognito_id, name, email, createdAt, updatedAt);
+    public static UserDomain from(UUID id, String cognitoId, Name name, Email email, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        return new UserDomain(id, cognitoId, name, email, createdAt, updatedAt);
     }
 
     public void changeName(Name newName) {
@@ -42,8 +42,8 @@ public class UserDomain {
     public UUID getId() {
         return id;
     }
-    public String getCognito_id() {
-        return cognito_id;
+    public String getCognitoId() {
+        return cognitoId;
     }
     public Name getName() {
         return name;
