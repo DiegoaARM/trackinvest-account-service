@@ -1,6 +1,6 @@
 # 📈 TrackInvest - Backend API
 
-**TrackInvest** es el núcleo de una plataforma de gestión de inversiones diseñada bajo los más altos estándares de ingeniería de software. El objetivo del proyecto es proporcionar una API escalable, segura y fácil de mantener para el seguimiento de activos financieros.
+**TrackInvest** es el núcleo de una plataforma de gestión de inversiones diseñada bajo estándares de buenas prácticas. El objetivo del proyecto es proporcionar una API escalable, segura y fácil de mantener para el seguimiento de activos financieros.
 
 ## 🛠️ Stack Tecnológico
 
