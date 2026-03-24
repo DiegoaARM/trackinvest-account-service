@@ -2,36 +2,45 @@ package com.backend.trackinvest.usuarios.domain.models.user;
 
 import com.backend.trackinvest.usuarios.domain.models.user.valueobjects.Email;
 import com.backend.trackinvest.usuarios.domain.models.user.valueobjects.Name;
+import com.backend.trackinvest.usuarios.domain.models.wallet.WalletDomain;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
 public class UserDomain {
 
     private final UUID id;
-    private final String cognito_id;
+    private final String cognitoId;
     private Name name;
     private final Email email;
     private final LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private List<WalletDomain> wallets;
 
-    private UserDomain(UUID id, String cognitoId, Name name, Email email, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    private UserDomain(UUID id, String cognitoId, Name name, Email email, LocalDateTime createdAt, LocalDateTime updatedAt, List<WalletDomain> wallets) {
         this.id = Objects.requireNonNull(id, "ID is mandatory");
-        cognito_id = cognitoId;
+        this.cognitoId = Objects.requireNonNull(cognitoId, "Cognito ID is mandatory");
         this.name = Objects.requireNonNull(name, "Name is mandatory");
         this.email = Objects.requireNonNull(email, "Email is mandatory");
         this.createdAt = Objects.requireNonNull(createdAt);
         this.updatedAt = Objects.requireNonNull(updatedAt);
+        this.wallets = Objects.requireNonNull(wallets, "Wallets is mandatory");
     }
 
-    public static UserDomain create(UUID id, String cognito_id, Name name, Email email) {
-        LocalDateTime ahora = LocalDateTime.now();
-        return new UserDomain(id, cognito_id, name, email, ahora, ahora);
+    public static UserDomain create(UUID id, String cognitoId, Name name, Email email, List<WalletDomain> wallets) {
+        LocalDateTime now = LocalDateTime.now();
+        return new UserDomain(id, cognitoId, name, email, now, now, wallets);
     }
 
-    public static UserDomain from(UUID id, String cognito_id, Name name, Email email, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        return new UserDomain(id, cognito_id, name, email, createdAt, updatedAt);
+    public static UserDomain from(UUID id, String cognitoId, Name name, Email email, LocalDateTime createdAt, LocalDateTime updatedAt, List<WalletDomain> wallets) {
+        return new UserDomain(id, cognitoId, name, email, createdAt, updatedAt, wallets);
+    }
+
+    public static UserDomain from(UUID id, String cognitoId, Name name, Email email, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        return new UserDomain(id, cognitoId, name, email, createdAt, updatedAt, new ArrayList<>());
     }
 
     public void changeName(Name newName) {
@@ -42,8 +51,8 @@ public class UserDomain {
     public UUID getId() {
         return id;
     }
-    public String getCognito_id() {
-        return cognito_id;
+    public String getCognitoId() {
+        return cognitoId;
     }
     public Name getName() {
         return name;
@@ -57,5 +66,7 @@ public class UserDomain {
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
-
+    public List<WalletDomain> getWallets() {
+        return wallets;
+    }
 }

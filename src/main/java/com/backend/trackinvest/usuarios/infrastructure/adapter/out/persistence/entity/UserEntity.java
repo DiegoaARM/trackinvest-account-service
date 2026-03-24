@@ -8,10 +8,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "usuarios")
+@Table(name = "users")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -22,8 +24,8 @@ public class UserEntity {
     @Id
     private UUID id;
 
-    @Column(nullable = false, unique = true)
-    private String cognito_id;
+    @Column(name = "cognito_id",nullable = false, unique = true)
+    private String cognitoId;
 
     @Column(nullable = false, length = 25)
     private String firstName;
@@ -45,4 +47,8 @@ public class UserEntity {
 
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<WalletEntity> walletsList = new ArrayList<>();
 }

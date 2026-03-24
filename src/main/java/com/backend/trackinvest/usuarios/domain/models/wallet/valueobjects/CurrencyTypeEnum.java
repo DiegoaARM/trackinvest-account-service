@@ -1,0 +1,24 @@
+package com.backend.trackinvest.usuarios.domain.models.wallet.valueobjects;
+
+public enum CurrencyTypeEnum {
+    USD("USD"),
+    EUR("EUR"),
+    GBP("GBP"),
+    JPY("JPY"),
+    AUD("AUD"),
+    CAD("CAD"),
+    CHF("CHF"),
+    CNY("CNY"),
+    SEK("SEK"),
+    NZD("NZD");
+
+    private final String code;
+
+    CurrencyTypeEnum(String code) {
+        this.code = code;
+    }
+
+    public String getCode() {
+        return code;
+    }
+}
