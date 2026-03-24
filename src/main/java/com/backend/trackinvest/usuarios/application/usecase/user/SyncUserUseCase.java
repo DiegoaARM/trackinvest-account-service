@@ -23,7 +23,8 @@ public class SyncUserUseCase implements SyncUserPort {
                     UUID.randomUUID(),
                     cognitoId,
                     Name.fromFullString(fullname),
-                    new Email(email)
+                    new Email(email),
+
             );
         userRepository.save(newUser);
         }

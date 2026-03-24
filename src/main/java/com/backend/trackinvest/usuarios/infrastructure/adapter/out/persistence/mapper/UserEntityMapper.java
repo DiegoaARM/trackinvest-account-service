@@ -32,7 +32,15 @@ public interface UserEntityMapper {
                     new Email(entity.getEmail()),
                     entity.getCreatedAt(),
                     entity.getUpdatedAt(),
-                    entity.getWalletsList().stream().map(WalletDomain::from).toList()
+                    entity.getWalletsList().stream().map(
+                            w -> WalletDomain.from(
+                                    w.getId(),
+                                    w.getName(),
+                                    w.getBalance(),
+                                    w.getCurrency(),
+                                    w.getCreatedAt(),
+                                    w.getUpdatedAt()
+                    )).toList()
             );
         }
 

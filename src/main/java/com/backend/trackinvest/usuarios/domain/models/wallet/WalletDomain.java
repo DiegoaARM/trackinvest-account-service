@@ -38,6 +38,10 @@ public class WalletDomain {
         return new WalletDomain(id, name, userDomain, balance, currency, createdAt, updatedAt);
     }
 
+    public static WalletDomain from(UUID id, String name, BigDecimal balance, CurrencyTypeEnum currency, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        return new WalletDomain(id, name, null, balance, currency, createdAt, updatedAt);
+    }
+
     public void changeName(String newName) {
         this.name = Objects.requireNonNull(newName, "New name cannot be null");
         this.updatedAt = LocalDateTime.now();
@@ -52,27 +56,21 @@ public class WalletDomain {
     public UUID getId() {
         return id;
     }
-
     public String getName() {
         return name;
     }
-
     public UserDomain getUserDomain() {
         return userDomain;
     }
-
     public BigDecimal getBalance() {
         return balance;
     }
-
     public CurrencyTypeEnum getCurrency() {
         return currency;
     }
-
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
-
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
