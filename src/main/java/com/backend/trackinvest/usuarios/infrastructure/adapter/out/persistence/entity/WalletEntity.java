@@ -1,34 +1,29 @@
 package com.backend.trackinvest.usuarios.infrastructure.adapter.out.persistence.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "users")
+@Table(name = "wallets")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserEntity {
+public class WalletEntity {
 
     @Id
     private UUID id;
 
-    @Column(name = "cognito_id",nullable = false, unique = true)
-    private String cognitoId;
+    @Column(nullable = false, length = 50)
+    private String name;
 
-    @Column(nullable = false, length = 25)
-    private String firstName;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserEntity user;
 
     @Column(nullable = true, length = 25)
     private String middleName;
@@ -48,7 +43,5 @@ public class UserEntity {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @Builder.Default
-    private List<WalletEntity> walletsList = new ArrayList<>();
+
 }
