@@ -24,7 +24,7 @@ public class SyncUserUseCase implements SyncUserPort {
                     cognitoId,
                     Name.fromFullString(fullname),
                     new Email(email),
-
+                    null
             );
         userRepository.save(newUser);
         }
