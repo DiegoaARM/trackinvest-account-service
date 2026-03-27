@@ -1,8 +1,9 @@
-package com.backend.trackinvest.usuarios.domain.rules;
+package com.backend.trackinvest.usuarios.domain.rules.user;
 
 import com.backend.trackinvest.usuarios.domain.exception.format.EmailInvalidException;
+import com.backend.trackinvest.usuarios.domain.rules.DomainRule;
 
-public final class EmailValidRule implements DomainRule<String>{
+public final class EmailValidRule implements DomainRule<String> {
 
     private EmailValidRule() {}
 

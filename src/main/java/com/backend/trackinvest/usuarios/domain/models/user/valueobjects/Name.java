@@ -1,6 +1,6 @@
 package com.backend.trackinvest.usuarios.domain.models.user.valueobjects;
 
-import com.backend.trackinvest.usuarios.domain.rules.NameValidRule;
+import com.backend.trackinvest.usuarios.domain.rules.user.NameValidRule;
 
 public record Name(
         String firstName,
