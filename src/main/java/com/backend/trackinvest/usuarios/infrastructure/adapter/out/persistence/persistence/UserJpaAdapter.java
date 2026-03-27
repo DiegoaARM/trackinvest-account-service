@@ -4,22 +4,19 @@ import com.backend.trackinvest.usuarios.application.ports.out.UserRepositoryPort
 import com.backend.trackinvest.usuarios.domain.models.user.UserDomain;
 import com.backend.trackinvest.usuarios.infrastructure.adapter.out.persistence.mapper.UserEntityMapper;
 import com.backend.trackinvest.usuarios.infrastructure.adapter.out.persistence.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 import java.util.UUID;
 
 @Component
+@RequiredArgsConstructor
 public class UserJpaAdapter implements UserRepositoryPort {
 
 
     private final UserRepository userRepository;
     private final UserEntityMapper userEntityMapper;
-
-    public UserJpaAdapter(UserRepository userRepository, UserEntityMapper userEntityMapper) {
-        this.userRepository = userRepository;
-        this.userEntityMapper = userEntityMapper;
-    }
 
     @Override
     public Optional<UserDomain> findById(UUID id) {
