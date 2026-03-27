@@ -1,11 +1,19 @@
 package com.backend.trackinvest.usuarios.application.usecase.wallet;
 
+import com.backend.trackinvest.usuarios.application.ports.in.dto.wallet.CreateWalletRequestDTO;
 import com.backend.trackinvest.usuarios.application.ports.in.dto.wallet.GetWalletResponseDTO;
 import com.backend.trackinvest.usuarios.application.ports.in.service.wallet.CreateWalletPort;
 import com.backend.trackinvest.usuarios.application.ports.out.UserRepositoryPort;
 import com.backend.trackinvest.usuarios.application.ports.out.WalletRepositoryPort;
+import com.backend.trackinvest.usuarios.domain.exception.business.UserNotFoundException;
+import com.backend.trackinvest.usuarios.domain.models.user.UserDomain;
+import com.backend.trackinvest.usuarios.domain.models.wallet.WalletDomain;
+import com.backend.trackinvest.usuarios.domain.models.wallet.valueobjects.CurrencyTypeEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -15,7 +23,20 @@ public class CreateWalletUseCase implements CreateWalletPort {
     private final WalletRepositoryPort walletRepository;
 
     @Override
-    public void execute(String userCognitoId, GetWalletResponseDTO wallet) {
+    public GetWalletResponseDTO execute(String cognitoId, CreateWalletRequestDTO wallet) {
+        UserDomain user = userRepository.findByCognitoId(cognitoId)
+                .orElseThrow(UserNotFoundException::new);
 
+        WalletDomain walletDomain = WalletDomain.create(
+                UUID.randomUUID(),
+                wallet.name(),
+                user,
+                wallet.currency()
+        );
+        // 3. LA AÑADIMOS al usuario (Para que pase sus validaciones)
+        user.addNewWallet(walletDomain);
+
+        WalletDomain savedWallet = walletRepository.save(walletDomain);
+        return GetWalletResponseDTO.fromDomain(savedWallet);
     }
 }

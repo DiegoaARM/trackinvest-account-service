@@ -3,12 +3,11 @@ package com.backend.trackinvest.usuarios.domain.models.user;
 import com.backend.trackinvest.usuarios.domain.models.user.valueobjects.Email;
 import com.backend.trackinvest.usuarios.domain.models.user.valueobjects.Name;
 import com.backend.trackinvest.usuarios.domain.models.wallet.WalletDomain;
+import com.backend.trackinvest.usuarios.domain.models.wallet.valueobjects.CurrencyTypeEnum;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 public class UserDomain {
 
@@ -35,6 +34,11 @@ public class UserDomain {
         return new UserDomain(id, cognitoId, name, email, now, now, wallets);
     }
 
+    public static UserDomain create(UUID id, String cognitoId, Name name, Email email) {
+        LocalDateTime now = LocalDateTime.now();
+        return new UserDomain(id, cognitoId, name, email, now, now, new ArrayList<>());
+    }
+
     public static UserDomain from(UUID id, String cognitoId, Name name, Email email, LocalDateTime createdAt, LocalDateTime updatedAt, List<WalletDomain> wallets) {
         return new UserDomain(id, cognitoId, name, email, createdAt, updatedAt, wallets);
     }
@@ -46,6 +50,10 @@ public class UserDomain {
     public void changeName(Name newName) {
         this.name = Objects.requireNonNull(newName, "New name cannot be null");
         this.updatedAt = LocalDateTime.now();
+    }
+
+    public void addWallet(WalletDomain newWallet) {
+        this.wallets.add(newWallet);
     }
 
     public UUID getId() {
