@@ -1,6 +1,7 @@
-package com.backend.trackinvest.usuarios.domain.rules;
+package com.backend.trackinvest.usuarios.domain.rules.user;
 
-import com.backend.trackinvest.usuarios.domain.exception.format.NameInvalidException;
+import com.backend.trackinvest.usuarios.domain.exception.format.UserNameInvalidException;
+import com.backend.trackinvest.usuarios.domain.rules.DomainRule;
 
 public final class NameValidRule implements DomainRule<String> {
 
@@ -22,7 +23,7 @@ public final class NameValidRule implements DomainRule<String> {
         }
 
         if (nameClean.length() < 3 || nameClean.length() > 25) {
-            throw new NameInvalidException(name);
+            throw new UserNameInvalidException(name);
         }
 
         return nameClean;
