@@ -34,7 +34,7 @@ public class CreateWalletUseCase implements CreateWalletPort {
                 wallet.currency()
         );
         // 3. LA AÑADIMOS al usuario (Para que pase sus validaciones)
-        user.addNewWallet(walletDomain);
+        user.addWallet(walletDomain);
 
         WalletDomain savedWallet = walletRepository.save(walletDomain);
         return GetWalletResponseDTO.fromDomain(savedWallet);
