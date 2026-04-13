@@ -5,14 +5,12 @@ import com.backend.trackinvest.usuarios.application.ports.in.dto.wallet.GetWalle
 import com.backend.trackinvest.usuarios.application.ports.in.service.wallet.CreateWalletPort;
 import com.backend.trackinvest.usuarios.application.ports.out.UserRepositoryPort;
 import com.backend.trackinvest.usuarios.application.ports.out.WalletRepositoryPort;
-import com.backend.trackinvest.usuarios.domain.exception.business.UserNotFoundException;
+import com.backend.trackinvest.usuarios.domain.exception.user.business.UserNotFoundException;
 import com.backend.trackinvest.usuarios.domain.models.user.UserDomain;
 import com.backend.trackinvest.usuarios.domain.models.wallet.WalletDomain;
-import com.backend.trackinvest.usuarios.domain.models.wallet.valueobjects.CurrencyTypeEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.UUID;
 
 @Service

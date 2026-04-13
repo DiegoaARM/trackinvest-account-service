@@ -14,8 +14,8 @@ public record GetUserResponseDTO(
         return new GetUserResponseDTO(
                 user.getId(),
                 user.getCognitoId(),
-                user.getEmail().value(),
-                user.getName().fullName() // "Diego Duque"
+                user.getEmail(),
+                user.getFullname()
         );
     }
 }

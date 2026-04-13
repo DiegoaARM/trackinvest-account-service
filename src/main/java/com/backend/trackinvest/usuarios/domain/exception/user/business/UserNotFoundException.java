@@ -1,8 +1,6 @@
-package com.backend.trackinvest.usuarios.domain.exception.business;
+package com.backend.trackinvest.usuarios.domain.exception.user.business;
 
-import com.backend.trackinvest.usuarios.domain.exception.DomainException;
-
-import java.util.UUID;
+import com.backend.trackinvest.common.exception.DomainException;
 
 public class UserNotFoundException extends DomainException {
 

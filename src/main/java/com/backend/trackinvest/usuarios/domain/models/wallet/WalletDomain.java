@@ -1,7 +1,6 @@
 package com.backend.trackinvest.usuarios.domain.models.wallet;
 
 import com.backend.trackinvest.usuarios.domain.models.user.UserDomain;
-import com.backend.trackinvest.usuarios.domain.models.user.valueobjects.Name;
 import com.backend.trackinvest.usuarios.domain.models.wallet.valueobjects.CurrencyTypeEnum;
 import lombok.Builder;
 

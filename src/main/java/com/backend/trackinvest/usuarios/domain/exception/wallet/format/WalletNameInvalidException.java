@@ -1,6 +1,6 @@
-package com.backend.trackinvest.usuarios.domain.exception.format;
+package com.backend.trackinvest.usuarios.domain.exception.wallet.format;
 
-import com.backend.trackinvest.usuarios.domain.exception.DomainException;
+import com.backend.trackinvest.common.exception.DomainException;
 
 public class WalletNameInvalidException extends DomainException {
     public WalletNameInvalidException(String name) {

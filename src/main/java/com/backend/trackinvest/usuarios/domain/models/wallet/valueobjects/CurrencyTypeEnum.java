@@ -3,6 +3,7 @@ package com.backend.trackinvest.usuarios.domain.models.wallet.valueobjects;
 public enum CurrencyTypeEnum {
     USD("USD"),
     EUR("EUR"),
+    COP("COP"),
     GBP("GBP"),
     JPY("JPY"),
     AUD("AUD"),

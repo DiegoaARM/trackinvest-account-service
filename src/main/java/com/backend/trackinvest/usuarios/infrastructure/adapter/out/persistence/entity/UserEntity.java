@@ -28,16 +28,7 @@ public class UserEntity {
     private String cognitoId;
 
     @Column(nullable = false, length = 25)
-    private String firstName;
-
-    @Column(nullable = true, length = 25)
-    private String middleName;
-
-    @Column(nullable = false, length = 25)
-    private String lastName;
-
-    @Column(nullable = true, length = 25)
-    private String secondLastName;
+    private String fullname;
 
     @Column(nullable = false, unique = true)
     private String email;

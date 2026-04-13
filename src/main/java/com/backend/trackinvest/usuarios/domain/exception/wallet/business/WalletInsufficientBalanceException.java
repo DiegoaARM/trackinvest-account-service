@@ -1,6 +1,6 @@
-package com.backend.trackinvest.usuarios.domain.exception.format;
+package com.backend.trackinvest.usuarios.domain.exception.wallet.business;
 
-import com.backend.trackinvest.usuarios.domain.exception.DomainException;
+import com.backend.trackinvest.common.exception.DomainException;
 
 import java.math.BigDecimal;
 

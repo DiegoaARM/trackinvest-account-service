@@ -1,4 +1,4 @@
-package com.backend.trackinvest.usuarios.domain.exception;
+package com.backend.trackinvest.common.exception;
 
 public abstract class DomainException extends RuntimeException {
 
