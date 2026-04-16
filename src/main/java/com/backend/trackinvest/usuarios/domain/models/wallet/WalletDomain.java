@@ -35,6 +35,11 @@ public class WalletDomain {
         return new WalletDomain(id, name, user, BigDecimal.ZERO, currency, now, now);
     }
 
+    public static WalletDomain createDefault(UUID id, String name, UserDomain user, CurrencyTypeEnum currency) {
+        LocalDateTime now = LocalDateTime.now();
+        return new WalletDomain(id, name, user, BigDecimal.ZERO, currency, now, now);
+    }
+
     public static WalletDomain from(UUID id, String name, UserDomain user, BigDecimal balance, CurrencyTypeEnum currency, LocalDateTime createdAt, LocalDateTime updatedAt) {
         return new WalletDomain(id, name, user, balance, currency, createdAt, updatedAt);
     }

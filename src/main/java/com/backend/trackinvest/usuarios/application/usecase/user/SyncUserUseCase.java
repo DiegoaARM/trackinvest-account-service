@@ -16,7 +16,6 @@ import java.util.UUID;
 public class SyncUserUseCase implements SyncUserPort {
 
     private final UserRepositoryPort userRepository;
-    private final CreateWalletPort createWalletPort;
 
     @Override
     public void execute(String cognitoId, String email, String fullname) {
@@ -31,21 +30,21 @@ public class SyncUserUseCase implements SyncUserPort {
                 email
         );
 
-        // 3. Crear la Billetera Inicial usando el Factory de Wallet
-        // Nota: Le pasamos 'newUser' para establecer la relación bidireccional
+        UserDomain userWithoutWallets = UserDomain.create(
+                newUser.getId(),
+                cognitoId,
+                fullname,
+                email
+        );
+
         WalletDomain initialWallet = WalletDomain.create(
                 UUID.randomUUID(),
                 "Initial Wallet",
-                newUser,
-                CurrencyTypeEnum.USD // Moneda por defecto de bienvenida
+                userWithoutWallets,
+                CurrencyTypeEnum.USD //initial currency
         );
 
-        // Esto ejecuta las validaciones de nombre, límites, etc.
         newUser.addWallet(initialWallet);
-
-        // 5. Persistir el Agregado Completo
-        // Al guardar el usuario, JPA detectará la nueva billetera en la lista
-        // y la insertará gracias al Cascade
         userRepository.save(newUser);
     }
 }
