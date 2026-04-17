@@ -1,6 +1,6 @@
 package com.backend.trackinvest.usuarios.domain.wallet.rules;
 
-import com.backend.trackinvest.usuarios.domain.wallet.exception.business.WalletNameInvalidException;
+import com.backend.trackinvest.usuarios.domain.wallet.exception.format.WalletNameInvalidException;
 
 public class WalletNameValidRule {
 
