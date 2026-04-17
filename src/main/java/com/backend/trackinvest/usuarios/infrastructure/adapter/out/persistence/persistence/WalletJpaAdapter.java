@@ -31,4 +31,14 @@ public class WalletJpaAdapter implements WalletRepositoryPort {
                 )
         );
     }
+
+    @Override
+    public boolean existsByNameAndUserId(String name, UUID userId) {
+        return walletRepository.existsByNameAndUserId(name, userId);
+    }
+
+    @Override
+    public void delete(UUID id) {
+        walletRepository.deleteById(id);
+    }
 }

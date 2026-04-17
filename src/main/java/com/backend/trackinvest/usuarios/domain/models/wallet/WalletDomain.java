@@ -59,6 +59,11 @@ public class WalletDomain {
         return this.balance;
     }
 
+    public void changeCurrency(CurrencyTypeEnum newCurrency) {
+        this.currency = Objects.requireNonNull(newCurrency, "New currency cannot be null");
+        this.updatedAt = LocalDateTime.now();
+    }
+
     public UUID getId() {
         return id;
     }

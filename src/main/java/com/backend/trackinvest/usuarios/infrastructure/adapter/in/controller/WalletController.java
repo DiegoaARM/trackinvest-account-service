@@ -2,7 +2,12 @@ package com.backend.trackinvest.usuarios.infrastructure.adapter.in.controller;
 
 import com.backend.trackinvest.usuarios.application.ports.in.dto.wallet.CreateWalletRequestDTO;
 import com.backend.trackinvest.usuarios.application.ports.in.dto.wallet.GetWalletResponseDTO;
+import com.backend.trackinvest.usuarios.application.ports.in.dto.wallet.UpdateWalletRequestDTO;
+import com.backend.trackinvest.usuarios.application.ports.in.dto.wallet.UpdateWalletBalanceRequestDTO;
 import com.backend.trackinvest.usuarios.application.ports.in.service.wallet.CreateWalletPort;
+import com.backend.trackinvest.usuarios.application.ports.in.service.wallet.UpdateWalletPort;
+import com.backend.trackinvest.usuarios.application.ports.in.service.wallet.UpdateWalletBalancePort;
+import com.backend.trackinvest.usuarios.application.ports.in.service.wallet.DeleteWalletPort;
 import com.backend.trackinvest.usuarios.infrastructure.adapter.out.persistence.mapper.WalletEntityMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -11,10 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/wallets")
@@ -23,6 +25,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class WalletController {
 
     private final CreateWalletPort createWalletPort;
+    private final UpdateWalletPort updateWalletPort;
+    private final UpdateWalletBalancePort updateWalletBalancePort;
+    private final DeleteWalletPort deleteWalletPort;
     private final WalletEntityMapper mapper;
 
     @PostMapping
@@ -40,5 +45,52 @@ public class WalletController {
 
         // 4. Retornamos 201 Created
         return new ResponseEntity<>(newWallet, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{walletId}")
+    public ResponseEntity<GetWalletResponseDTO> updateWallet(
+            @PathVariable java.util.UUID walletId,
+            @Valid @RequestBody UpdateWalletRequestDTO request,
+            @AuthenticationPrincipal Jwt jwt
+    ) {
+        // 1. Extraemos el cognito_id del token JWT
+        String cognitoId = jwt.getSubject();
+
+        // 2. Ejecutamos el caso de uso
+        GetWalletResponseDTO updatedWallet = updateWalletPort.execute(cognitoId, walletId, request);
+
+        // 3. Retornamos 200 OK
+        return ResponseEntity.ok(updatedWallet);
+    }
+
+    @PutMapping("/{walletId}/balance")
+    public ResponseEntity<GetWalletResponseDTO> updateWalletBalance(
+            @PathVariable java.util.UUID walletId,
+            @Valid @RequestBody UpdateWalletBalanceRequestDTO request,
+            @AuthenticationPrincipal Jwt jwt
+    ) {
+        // 1. Extraemos el cognito_id del token JWT
+        String cognitoId = jwt.getSubject();
+
+        // 2. Ejecutamos el caso de uso
+        GetWalletResponseDTO updatedWallet = updateWalletBalancePort.execute(cognitoId, walletId, request);
+
+        // 3. Retornamos 200 OK
+        return ResponseEntity.ok(updatedWallet);
+    }
+
+    @DeleteMapping("/{walletId}")
+    public ResponseEntity<Void> deleteWallet(
+            @PathVariable java.util.UUID walletId,
+            @AuthenticationPrincipal Jwt jwt
+    ) {
+        // 1. Extraemos el cognito_id del token JWT
+        String cognitoId = jwt.getSubject();
+
+        // 2. Ejecutamos el caso de uso
+        deleteWalletPort.execute(cognitoId, walletId);
+
+        // 3. Retornamos 204 No Content
+        return ResponseEntity.noContent().build();
     }
 }
