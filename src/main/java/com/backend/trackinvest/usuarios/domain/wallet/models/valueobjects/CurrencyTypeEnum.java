@@ -1,4 +1,4 @@
-package com.backend.trackinvest.usuarios.domain.models.wallet.valueobjects;
+package com.backend.trackinvest.usuarios.domain.wallet.models.valueobjects;
 
 public enum CurrencyTypeEnum {
     USD("USD"),

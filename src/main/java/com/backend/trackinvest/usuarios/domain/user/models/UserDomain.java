@@ -1,6 +1,6 @@
-package com.backend.trackinvest.usuarios.domain.models.user;
+package com.backend.trackinvest.usuarios.domain.user.models;
 
-import com.backend.trackinvest.usuarios.domain.models.wallet.WalletDomain;
+import com.backend.trackinvest.usuarios.domain.wallet.models.WalletDomain;
 
 import java.time.LocalDateTime;
 import java.util.*;

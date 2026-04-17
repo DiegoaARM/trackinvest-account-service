@@ -1,7 +1,7 @@
 package com.backend.trackinvest.usuarios.infrastructure.adapter.out.persistence.persistence;
 
 import com.backend.trackinvest.usuarios.application.ports.out.UserRepositoryPort;
-import com.backend.trackinvest.usuarios.domain.models.user.UserDomain;
+import com.backend.trackinvest.usuarios.domain.user.models.UserDomain;
 import com.backend.trackinvest.usuarios.infrastructure.adapter.out.persistence.mapper.UserEntityMapper;
 import com.backend.trackinvest.usuarios.infrastructure.adapter.out.persistence.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

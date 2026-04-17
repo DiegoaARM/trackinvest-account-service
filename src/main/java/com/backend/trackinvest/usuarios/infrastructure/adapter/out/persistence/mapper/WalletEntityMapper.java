@@ -1,6 +1,6 @@
 package com.backend.trackinvest.usuarios.infrastructure.adapter.out.persistence.mapper;
 
-import com.backend.trackinvest.usuarios.domain.models.wallet.WalletDomain;
+import com.backend.trackinvest.usuarios.domain.wallet.models.WalletDomain;
 import com.backend.trackinvest.usuarios.infrastructure.adapter.out.persistence.entity.WalletEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

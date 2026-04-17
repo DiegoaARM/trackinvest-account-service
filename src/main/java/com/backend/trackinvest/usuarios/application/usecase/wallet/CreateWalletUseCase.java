@@ -5,11 +5,11 @@ import com.backend.trackinvest.usuarios.application.ports.in.dto.wallet.GetWalle
 import com.backend.trackinvest.usuarios.application.ports.in.service.wallet.CreateWalletPort;
 import com.backend.trackinvest.usuarios.application.ports.out.UserRepositoryPort;
 import com.backend.trackinvest.usuarios.application.ports.out.WalletRepositoryPort;
-import com.backend.trackinvest.usuarios.domain.exception.user.business.UserNotFoundException;
-import com.backend.trackinvest.usuarios.domain.exception.wallet.business.WalletNameDuplicateException;
-import com.backend.trackinvest.usuarios.domain.models.user.UserDomain;
-import com.backend.trackinvest.usuarios.domain.models.wallet.WalletDomain;
-import com.backend.trackinvest.usuarios.domain.rules.wallet.NameWalletValidRule;
+import com.backend.trackinvest.usuarios.domain.user.exception.business.UserNotFoundException;
+import com.backend.trackinvest.usuarios.domain.wallet.exception.business.WalletNameDuplicateException;
+import com.backend.trackinvest.usuarios.domain.user.models.UserDomain;
+import com.backend.trackinvest.usuarios.domain.wallet.models.WalletDomain;
+import com.backend.trackinvest.usuarios.domain.wallet.rules.WalletNameValidRule;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +27,7 @@ public class CreateWalletUseCase implements CreateWalletPort {
         UserDomain user = userRepository.findByCognitoId(cognitoId)
                 .orElseThrow(UserNotFoundException::new);
 
-        NameWalletValidRule.validate(wallet.name());
+        WalletNameValidRule.validate(wallet.name());
 
         if (walletRepository.existsByNameAndUserId(wallet.name(), user.getId())) {
             throw new WalletNameDuplicateException();

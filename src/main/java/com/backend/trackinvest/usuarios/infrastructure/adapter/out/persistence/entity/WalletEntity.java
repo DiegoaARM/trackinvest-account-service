@@ -1,8 +1,7 @@
 package com.backend.trackinvest.usuarios.infrastructure.adapter.out.persistence.entity;
 
-import com.backend.trackinvest.usuarios.domain.models.wallet.valueobjects.CurrencyTypeEnum;
+import com.backend.trackinvest.usuarios.domain.wallet.models.valueobjects.CurrencyTypeEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 

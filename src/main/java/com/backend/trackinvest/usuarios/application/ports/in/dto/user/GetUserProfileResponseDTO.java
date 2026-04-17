@@ -1,7 +1,7 @@
 package com.backend.trackinvest.usuarios.application.ports.in.dto.user;
 
 import com.backend.trackinvest.usuarios.application.ports.in.dto.wallet.GetWalletResponseDTO;
-import com.backend.trackinvest.usuarios.domain.models.user.UserDomain;
+import com.backend.trackinvest.usuarios.domain.user.models.UserDomain;
 
 import java.util.List;
 import java.util.UUID;

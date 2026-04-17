@@ -1,4 +1,4 @@
-package com.backend.trackinvest.usuarios.domain.exception.wallet.business;
+package com.backend.trackinvest.usuarios.domain.wallet.exception.business;
 
 import com.backend.trackinvest.common.exception.DomainException;
 

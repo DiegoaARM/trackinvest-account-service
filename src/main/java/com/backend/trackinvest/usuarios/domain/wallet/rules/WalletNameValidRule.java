@@ -1,8 +1,8 @@
-package com.backend.trackinvest.usuarios.domain.rules.wallet;
+package com.backend.trackinvest.usuarios.domain.wallet.rules;
 
-import com.backend.trackinvest.usuarios.domain.exception.wallet.business.WalletNameInvalidException;
+import com.backend.trackinvest.usuarios.domain.wallet.exception.business.WalletNameInvalidException;
 
-public class NameWalletValidRule {
+public class WalletNameValidRule {
 
     public static void validate(String name) {
         if (name == null || name.trim().isEmpty()) {

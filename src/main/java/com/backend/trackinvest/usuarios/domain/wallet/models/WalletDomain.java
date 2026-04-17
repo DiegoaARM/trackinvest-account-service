@@ -1,7 +1,7 @@
-package com.backend.trackinvest.usuarios.domain.models.wallet;
+package com.backend.trackinvest.usuarios.domain.wallet.models;
 
-import com.backend.trackinvest.usuarios.domain.models.user.UserDomain;
-import com.backend.trackinvest.usuarios.domain.models.wallet.valueobjects.CurrencyTypeEnum;
+import com.backend.trackinvest.usuarios.domain.user.models.UserDomain;
+import com.backend.trackinvest.usuarios.domain.wallet.models.valueobjects.CurrencyTypeEnum;
 import lombok.Builder;
 
 import java.math.BigDecimal;

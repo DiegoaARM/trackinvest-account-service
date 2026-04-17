@@ -5,10 +5,10 @@ import com.backend.trackinvest.usuarios.application.ports.in.dto.wallet.UpdateWa
 import com.backend.trackinvest.usuarios.application.ports.in.service.wallet.UpdateWalletPort;
 import com.backend.trackinvest.usuarios.application.ports.out.WalletRepositoryPort;
 import com.backend.trackinvest.usuarios.application.ports.out.WalletSecurityPort;
-import com.backend.trackinvest.usuarios.domain.exception.wallet.business.WalletNameDuplicateException;
-import com.backend.trackinvest.usuarios.domain.exception.wallet.business.WalletNotFoundException;
-import com.backend.trackinvest.usuarios.domain.models.wallet.WalletDomain;
-import com.backend.trackinvest.usuarios.domain.rules.wallet.NameWalletValidRule;
+import com.backend.trackinvest.usuarios.domain.wallet.exception.business.WalletNameDuplicateException;
+import com.backend.trackinvest.usuarios.domain.wallet.exception.business.WalletNotFoundException;
+import com.backend.trackinvest.usuarios.domain.wallet.models.WalletDomain;
+import com.backend.trackinvest.usuarios.domain.wallet.rules.WalletNameValidRule;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +29,7 @@ public class UpdateWalletUseCase implements UpdateWalletPort {
                 .orElseThrow(WalletNotFoundException::new);
 
         if (request.name() != null) {
-            NameWalletValidRule.validate(request.name());
+            WalletNameValidRule.validate(request.name());
             if (!request.name().equals(wallet.getName()) &&
                 walletRepository.existsByNameAndUserId(request.name(), wallet.getUser().getId())) {
                 throw new WalletNameDuplicateException();

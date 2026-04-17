@@ -3,7 +3,7 @@ package com.backend.trackinvest.usuarios.application.usecase.user;
 import com.backend.trackinvest.usuarios.application.ports.in.dto.user.GetUserProfileResponseDTO;
 import com.backend.trackinvest.usuarios.application.ports.in.service.user.GetUserProfilePort;
 import com.backend.trackinvest.usuarios.application.ports.out.UserRepositoryPort;
-import com.backend.trackinvest.usuarios.domain.exception.user.business.UserNotFoundException;
+import com.backend.trackinvest.usuarios.domain.user.exception.business.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

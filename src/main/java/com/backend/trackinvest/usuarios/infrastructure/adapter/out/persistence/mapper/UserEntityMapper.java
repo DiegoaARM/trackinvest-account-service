@@ -1,14 +1,10 @@
 package com.backend.trackinvest.usuarios.infrastructure.adapter.out.persistence.mapper;
 
-import com.backend.trackinvest.usuarios.domain.models.user.UserDomain;
-import com.backend.trackinvest.usuarios.domain.models.wallet.WalletDomain;
+import com.backend.trackinvest.usuarios.domain.user.models.UserDomain;
+import com.backend.trackinvest.usuarios.domain.wallet.models.WalletDomain;
 import com.backend.trackinvest.usuarios.infrastructure.adapter.out.persistence.entity.UserEntity;
-import com.backend.trackinvest.usuarios.infrastructure.adapter.out.persistence.entity.WalletEntity;
 import org.hibernate.Hibernate;
-import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
 
 import java.util.List;
 

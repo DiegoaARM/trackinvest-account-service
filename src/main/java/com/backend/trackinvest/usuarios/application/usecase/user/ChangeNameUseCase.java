@@ -2,8 +2,8 @@ package com.backend.trackinvest.usuarios.application.usecase.user;
 
 import com.backend.trackinvest.usuarios.application.ports.in.service.user.ChangeNamePort;
 import com.backend.trackinvest.usuarios.application.ports.out.UserRepositoryPort;
-import com.backend.trackinvest.usuarios.domain.exception.user.business.UserNotFoundException;
-import com.backend.trackinvest.usuarios.domain.models.user.UserDomain;
+import com.backend.trackinvest.usuarios.domain.user.exception.business.UserNotFoundException;
+import com.backend.trackinvest.usuarios.domain.user.models.UserDomain;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

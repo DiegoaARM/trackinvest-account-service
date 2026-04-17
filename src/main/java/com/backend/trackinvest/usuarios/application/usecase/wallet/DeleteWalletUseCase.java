@@ -3,9 +3,9 @@ package com.backend.trackinvest.usuarios.application.usecase.wallet;
 import com.backend.trackinvest.usuarios.application.ports.in.service.wallet.DeleteWalletPort;
 import com.backend.trackinvest.usuarios.application.ports.out.WalletRepositoryPort;
 import com.backend.trackinvest.usuarios.application.ports.out.WalletSecurityPort;
-import com.backend.trackinvest.usuarios.domain.exception.wallet.business.WalletCannotDeleteLastException;
-import com.backend.trackinvest.usuarios.domain.exception.wallet.business.WalletNotFoundException;
-import com.backend.trackinvest.usuarios.domain.models.wallet.WalletDomain;
+import com.backend.trackinvest.usuarios.domain.wallet.exception.business.WalletCannotDeleteLastException;
+import com.backend.trackinvest.usuarios.domain.wallet.exception.business.WalletNotFoundException;
+import com.backend.trackinvest.usuarios.domain.wallet.models.WalletDomain;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,11 +1,10 @@
 package com.backend.trackinvest.usuarios.application.usecase.user;
 
 import com.backend.trackinvest.usuarios.application.ports.in.service.user.SyncUserPort;
-import com.backend.trackinvest.usuarios.application.ports.in.service.wallet.CreateWalletPort;
 import com.backend.trackinvest.usuarios.application.ports.out.UserRepositoryPort;
-import com.backend.trackinvest.usuarios.domain.models.user.UserDomain;
-import com.backend.trackinvest.usuarios.domain.models.wallet.WalletDomain;
-import com.backend.trackinvest.usuarios.domain.models.wallet.valueobjects.CurrencyTypeEnum;
+import com.backend.trackinvest.usuarios.domain.user.models.UserDomain;
+import com.backend.trackinvest.usuarios.domain.wallet.models.WalletDomain;
+import com.backend.trackinvest.usuarios.domain.wallet.models.valueobjects.CurrencyTypeEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

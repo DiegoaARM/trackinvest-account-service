@@ -1,6 +1,6 @@
 package com.backend.trackinvest.usuarios.application.ports.out;
 
-import com.backend.trackinvest.usuarios.domain.models.user.UserDomain;
+import com.backend.trackinvest.usuarios.domain.user.models.UserDomain;
 
 import java.util.Optional;
 import java.util.UUID;

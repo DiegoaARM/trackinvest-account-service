@@ -1,6 +1,6 @@
 package com.backend.trackinvest.usuarios.application.ports.out;
 
-import com.backend.trackinvest.usuarios.domain.models.wallet.WalletDomain;
+import com.backend.trackinvest.usuarios.domain.wallet.models.WalletDomain;
 
 import java.util.Optional;
 import java.util.UUID;
