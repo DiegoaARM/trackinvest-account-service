@@ -1,4 +1,4 @@
-package com.backend.trackinvest.common.exception;
+package com.backend.trackinvest.common.domain.exception;
 
 public class RequiredAttributeException extends DomainException {
 
