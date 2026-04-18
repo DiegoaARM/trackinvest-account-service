@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.backend</groupId>
-	<artifactId>trackinvest</artifactId>
+	<artifactId>trackinvest-account-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>trackinvest</name>
+	<name>trackinvest-account-service</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>
