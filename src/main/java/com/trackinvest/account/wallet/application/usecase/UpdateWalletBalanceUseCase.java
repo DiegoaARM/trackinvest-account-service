@@ -4,7 +4,6 @@ import com.trackinvest.account.wallet.application.ports.in.dto.GetWalletResponse
 import com.trackinvest.account.wallet.application.ports.in.dto.UpdateWalletBalanceRequestDTO;
 import com.trackinvest.account.wallet.application.ports.in.service.UpdateWalletBalancePort;
 import com.trackinvest.account.wallet.application.ports.out.WalletRepositoryPort;
-import com.trackinvest.account.wallet.application.ports.out.WalletSecurityPort;
 import com.trackinvest.account.wallet.domain.exception.business.InvalidBalanceException;
 import com.trackinvest.account.wallet.domain.exception.business.InsufficientBalanceException;
 import com.trackinvest.account.wallet.domain.exception.business.WalletNotFoundException;
@@ -20,11 +19,9 @@ import java.util.UUID;
 public class UpdateWalletBalanceUseCase implements UpdateWalletBalancePort {
 
     private final WalletRepositoryPort walletRepository;
-    private final WalletSecurityPort walletSecurityPort;
 
     @Override
     public GetWalletResponseDTO execute(String cognitoId, UUID walletId, UpdateWalletBalanceRequestDTO request) {
-        walletSecurityPort.validateWalletOwnership(walletId, cognitoId);
 
         WalletDomain wallet = walletRepository.findById(walletId)
                 .orElseThrow(WalletNotFoundException::new);

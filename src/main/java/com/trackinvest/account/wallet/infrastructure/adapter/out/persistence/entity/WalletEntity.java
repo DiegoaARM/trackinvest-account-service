@@ -2,7 +2,6 @@ package com.trackinvest.account.wallet.infrastructure.adapter.out.persistence.en
 
 import com.trackinvest.account.user.infrastructure.adapter.out.persistence.entity.UserEntity;
 import com.trackinvest.account.wallet.domain.models.valueobjects.CurrencyTypeEnum;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,7 +26,6 @@ public class WalletEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    @JsonIgnore
     private UserEntity user;
 
     @Column(nullable = false, precision = 19, scale = 4)

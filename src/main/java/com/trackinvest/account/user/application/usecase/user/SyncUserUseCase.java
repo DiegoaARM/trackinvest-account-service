@@ -29,17 +29,10 @@ public class SyncUserUseCase implements SyncUserPort {
                 email
         );
 
-        UserDomain userWithoutWallets = UserDomain.create(
-                newUser.getId(),
-                cognitoId,
-                fullname,
-                email
-        );
-
         WalletDomain initialWallet = WalletDomain.create(
                 UUID.randomUUID(),
                 "Initial Wallet",
-                userWithoutWallets,
+                newUser,
                 CurrencyTypeEnum.USD //initial currency
         );
 

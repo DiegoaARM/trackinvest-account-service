@@ -4,7 +4,6 @@ import com.trackinvest.account.wallet.application.ports.in.dto.GetWalletResponse
 import com.trackinvest.account.wallet.application.ports.in.dto.UpdateWalletRequestDTO;
 import com.trackinvest.account.wallet.application.ports.in.service.UpdateWalletPort;
 import com.trackinvest.account.wallet.application.ports.out.WalletRepositoryPort;
-import com.trackinvest.account.wallet.application.ports.out.WalletSecurityPort;
 import com.trackinvest.account.wallet.domain.exception.business.WalletNameDuplicateException;
 import com.trackinvest.account.wallet.domain.exception.business.WalletNotFoundException;
 import com.trackinvest.account.wallet.domain.models.WalletDomain;
@@ -19,11 +18,9 @@ import java.util.UUID;
 public class UpdateWalletUseCase implements UpdateWalletPort {
 
     private final WalletRepositoryPort walletRepository;
-    private final WalletSecurityPort walletSecurityPort;
 
     @Override
     public GetWalletResponseDTO execute(String cognitoId, UUID walletId, UpdateWalletRequestDTO request) {
-        walletSecurityPort.validateWalletOwnership(walletId, cognitoId);
 
         WalletDomain wallet = walletRepository.findById(walletId)
                 .orElseThrow(WalletNotFoundException::new);
