@@ -1,22 +1,22 @@
 # TrackInvest — Technical Documentation
 
 ## Index
-1. [Description](#1.-description)
-2. System Architecture
-3. Project Structure
-4. Patterns & Principles
-5. Domain Layer
-6. Application Layer
-7. Infrastructure Layer
-8. Data Flow
-9. Functional Modules
-10. Business Logic Highlights
-11. Accounts & Wallets System
-12. Account Reconciliation (Cruce)
-13. Reversals (Anulaciones)
-14. Guideline for New Implementations
-15. API Endpoints & Swagger
-16. Code Conventions
+1. [Description](#1-description)
+2. [System Architecture](#2-system-architecture)
+3. [Project Structure](#3-project-structure)
+4. [Patterns & Principles](#4-patterns--principles)
+5. [Domain Layer](#5-domain-layer)
+6. [Application Layer](#6-application-layer)
+7. [Infrastructure Layer](#7-infrastructure-layer)
+8. [Data Flow](#8-data-flow)
+9. [Functional Modules](#9-functional-modules)
+10. [Business Logic Highlights](#10-business-logic-highlights)
+11. [Accounts & Wallets System](#11-accounts--wallets-system)
+12. [Account Reconciliation (Cruce)](#12-account-reconciliation-cruce)
+13. [Reversals (Anulaciones)](#13-reversals-anulaciones)
+14. [Guideline for New Implementations](#14-guideline-for-new-implementations)
+15. [API Endpoints & Swagger](#15-api-endpoints--swagger)
+16. [Code Conventions](#16-code-conventions)
 
 ---
 
