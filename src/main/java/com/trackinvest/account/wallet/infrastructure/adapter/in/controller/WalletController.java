@@ -28,7 +28,6 @@ public class WalletController {
     private final UpdateWalletPort updateWalletPort;
     private final UpdateWalletBalancePort updateWalletBalancePort;
     private final DeleteWalletPort deleteWalletPort;
-    private final WalletEntityMapper mapper;
 
     @PostMapping
     public ResponseEntity<GetWalletResponseDTO> createWallet(
@@ -43,7 +42,6 @@ public class WalletController {
         // Este ya contiene la lógica de buscar al usuario y validar reglas
         GetWalletResponseDTO newWallet = createWalletPort.execute(cognitoId, request);
 
-        // 4. Retornamos 201 Created
         return new ResponseEntity<>(newWallet, HttpStatus.CREATED);
     }
 

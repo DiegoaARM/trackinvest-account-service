@@ -1,7 +1,7 @@
 # TrackInvest — Technical Documentation
 
 ## Index
-1. Description
+1. Description(#1.-description)
 2. System Architecture
 3. Project Structure
 4. Patterns & Principles
