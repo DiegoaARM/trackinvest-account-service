@@ -26,40 +26,67 @@ TrackInvest Account Service is a microservice responsible for managing users, wa
 Goals:
 - Manage users and wallet balances
 - Provide account and payment operations (register, query, reverse)
-- Enforce multi-tenant isolation via suscripcionId (tenant id)
 - Offer clear ports & adapters boundaries for maintainability and testability
 
 Technology stack (as present in the repo):
-- Java 21, Spring Boot 3.x
-- JPA / Hibernate (PostgreSQL expected)
-- MapStruct for mapping
-- Maven build
+- Java 21, Spring Boot 3.x.
+- JPA / Hibernate.
+- PostgreSQL.
+- Docker for containerization.
+- Kubernetes for orchestration.
+- Grafana, Prometheus for metrics.
+- AWS Cognito for login.
+- AWS for deployment.
 
 ## 2. System Architecture
 The service follows a Hexagonal / Ports & Adapters architecture:
 - Domain: Pure business logic, rules, exceptions
 - Application: Use-cases, rules validators, ports (interfaces)
 - Infrastructure: REST controllers, JPA repositories, adapters
-- Cross-cutting: Authorization helpers, generic exceptions
+- Common: Authorization helpers, generic exceptions
 
 High-level flow:
-Controller (REST) → Interactor / DTO mappers → Use Case → Rules Validator → Repository (JPA) → Entity mapping → Persistence
+Controller (REST) → DTO mappers → Use Case → Rules Validator → Repository (JPA) → Entity mapping → Persistence
 
 ## 3. Project Structure
-Relevant root folders (based on repository):
-- src/main/java/com/trackinvest/account/
-  - TrackInvestAccountServiceApplication.java (application entry)
-  - common/ (shared domain constructs, exceptions, services)
-  - user/ (user module: application, domain, infrastructure)
-  - wallet/ (wallet module: application, domain, infrastructure)
-- src/main/resources/application.properties
-- test/ (unit / integration tests)
 
-Example packages and responsibilities:
-- .common.domain: Domain exceptions, base domain types, domain rules
-- .user.application.usecase: Use cases and rules validators for user flows
-- .wallet.application.usecase: Use cases for wallet operations (credit, debit, sync)
-- .infrastructure.adapter: Controllers and secondary adapters
+```
+src/main/java/com/trackinvest/{service}/
+├── {module}/                         # e.g., user, investment, analytics
+│   ├── application/                  # Orchestration for this specific module
+│   │   ├── ports/
+│   │   │   ├── in/                   # Inbound Ports (DTOs, Mappers, Services)
+│   │   │   │   ├── dto/
+│   │   │   │   ├── mapper/
+│   │   │   │   └── service/
+│   │   │   └── out/                  # Outbound Ports (Repository/External Interfaces)
+│   │   │       └── {Module}RepositoryPort.java
+│   │   └── usecase/                  # Use Case Implementations
+│   ├── domain/                       # Core Business Logic for this module
+│   │   ├── exception/                # Domain-specific Exceptions
+│   │   ├── models/                   # Domain Entities
+│   │   ├── rules/                    # Business Rules/Invariants
+│   │   └── service/                  # Domain Services
+│   └── infrastructure/               # Technical details for this module
+│       ├── adapter/
+│       │   ├── in/                   # REST Controllers & Handlers
+│       │   │   ├── controller/
+│       │   │   └── handler/
+│       │   └── out/                  # Persistence & External Adapters
+│       │       └── persistence/      # Persistence adapters (JPA Entities, Repositories)
+│       │           └── entity/       # JPA Entities
+│       │           └── mapper/       # Entity Mappers
+│       │           └── persistence/  # JPA Adapters
+│       │           └── repository/   # Repository Implementations
+│       └── config/                   # Module-specific Spring Beans
+├── common/                           # Cross-cutting concerns (Shared logic)
+│   ├── domain/                       # Shared Domain (Base classes, Shared Enums)
+│   ├── exception/                    # Global/Generic Exceptions
+│   └── util/                         # Shared Helpers & Utilities
+├── config/                           # Global System Configurations (Security, Swagger)
+└── TrackInvestApplication.java       # Main Entry Point
+```
+
 
 ## 4. Patterns & Principles
 Applied principles:
