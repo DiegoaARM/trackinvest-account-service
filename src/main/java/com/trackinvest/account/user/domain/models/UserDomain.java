@@ -43,7 +43,7 @@ public class UserDomain {
         return new UserDomain(id, cognitoId, fullname, email, createdAt, updatedAt, new ArrayList<>());
     }
 
-    public void changefullname(String newfullname) {
+    public void changeFullname(String newfullname) {
         this.fullname = Objects.requireNonNull(newfullname, "New fullname cannot be null");
         this.updatedAt = LocalDateTime.now();
     }
