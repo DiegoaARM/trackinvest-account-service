@@ -40,7 +40,7 @@ public class UserJpaAdapter implements UserRepositoryPort {
     public UserDomain save(UserDomain user) {
         return userEntityMapper.toDomain(
                 userRepository.save(
-                        userEntityMapper.toEntityWithWallets(user)
+                        userEntityMapper.toEntity(user)
                 )
         );
     }

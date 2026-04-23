@@ -6,22 +6,46 @@ import com.trackinvest.account.user.infrastructure.adapter.out.persistence.entit
 import com.trackinvest.account.wallet.infrastructure.adapter.out.persistence.entity.WalletEntity;
 import org.hibernate.Hibernate;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface UserEntityMapper {
 
-    @Mapping(target = "walletsList", ignore = true)
-    UserEntity toEntity(UserDomain domain);
+    default UserEntity toEntity(UserDomain domain) {
+        if (domain == null) return null;
+        List<WalletEntity> wallets = null;
+        if (domain.getWalletsList() != null) {
+            wallets = domain.getWalletsList().stream()
+                    .map(walletDomain -> WalletEntity.builder()
+                            .id(walletDomain.getId())
+                            .name(walletDomain.getName())
+                            .balance(walletDomain.getBalance())
+                            .currency(walletDomain.getCurrency())
+                            .createdAt(walletDomain.getCreatedAt())
+                            .updatedAt(walletDomain.getUpdatedAt())
+                            .build())
+                    .toList();
+        }
+        UserEntity userEntity = UserEntity.builder()
+                .id(domain.getId())
+                .cognitoId(domain.getCognitoId())
+                .fullname(domain.getFullname())
+                .email(domain.getEmail())
+                .createdAt(domain.getCreatedAt())
+                .updatedAt(domain.getUpdatedAt())
+                .walletsList(wallets)
+                .build();
+        // Set the user reference in each wallet
+        if (userEntity.getWalletsList() != null) {
+            userEntity.getWalletsList().forEach(wallet -> wallet.setUser(userEntity));
+        }
+        return userEntity;
+    }
 
     default UserDomain toDomain(UserEntity entity) {
         if (entity == null) return null;
-
         List<WalletDomain> walletDomains = null;
-
-        // Verificamos si las billeteras están inicializadas para evitar LazyInitializationException
         if (Hibernate.isInitialized(entity.getWalletsList()) && entity.getWalletsList() != null) {
             walletDomains = entity.getWalletsList().stream()
                     .map(w -> WalletDomain.from(
@@ -33,7 +57,6 @@ public interface UserEntityMapper {
                             w.getUpdatedAt()
                     )).toList();
         }
-
         return UserDomain.from(
                 entity.getId(),
                 entity.getCognitoId(),
@@ -43,33 +66,5 @@ public interface UserEntityMapper {
                 entity.getUpdatedAt(),
                 walletDomains
         );
-    }
-
-    default UserEntity toEntityWithWallets(UserDomain domain) {
-        if (domain == null) return null;
-
-        UserEntity userEntity = toEntity(domain);
-
-        if (domain.getWalletsList() != null) {
-            List<WalletEntity> wallets = domain.getWalletsList().stream()
-                    .map(w -> {
-                        WalletEntity wallet = new WalletEntity();
-                        wallet.setId(w.getId());
-                        wallet.setName(w.getName());
-                        wallet.setBalance(w.getBalance());
-                        wallet.setCurrency(w.getCurrency());
-                        wallet.setCreatedAt(w.getCreatedAt());
-                        wallet.setUpdatedAt(w.getUpdatedAt());
-
-                        // 🔥 clave: setear solo referencia, no mapear user completo
-                        wallet.setUser(userEntity);
-
-                        return wallet;
-                    }).toList();
-
-            userEntity.setWalletsList(wallets);
-        }
-
-        return userEntity;
     }
 }
