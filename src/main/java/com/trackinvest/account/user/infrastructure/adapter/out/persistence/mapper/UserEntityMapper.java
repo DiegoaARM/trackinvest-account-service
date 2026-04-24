@@ -3,44 +3,26 @@ package com.trackinvest.account.user.infrastructure.adapter.out.persistence.mapp
 import com.trackinvest.account.user.domain.models.UserDomain;
 import com.trackinvest.account.wallet.domain.models.WalletDomain;
 import com.trackinvest.account.user.infrastructure.adapter.out.persistence.entity.UserEntity;
-import com.trackinvest.account.wallet.infrastructure.adapter.out.persistence.entity.WalletEntity;
+import com.trackinvest.account.wallet.infrastructure.adapter.out.persistence.mapper.WalletEntityMapper;
 import org.hibernate.Hibernate;
+import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {WalletEntityMapper.class})
 public interface UserEntityMapper {
 
-    default UserEntity toEntity(UserDomain domain) {
-        if (domain == null) return null;
-        List<WalletEntity> wallets = null;
-        if (domain.getWalletsList() != null) {
-            wallets = domain.getWalletsList().stream()
-                    .map(walletDomain -> WalletEntity.builder()
-                            .id(walletDomain.getId())
-                            .name(walletDomain.getName())
-                            .balance(walletDomain.getBalance())
-                            .currency(walletDomain.getCurrency())
-                            .createdAt(walletDomain.getCreatedAt())
-                            .updatedAt(walletDomain.getUpdatedAt())
-                            .build())
-                    .toList();
-        }
-        UserEntity userEntity = UserEntity.builder()
-                .id(domain.getId())
-                .cognitoId(domain.getCognitoId())
-                .fullname(domain.getFullname())
-                .email(domain.getEmail())
-                .createdAt(domain.getCreatedAt())
-                .updatedAt(domain.getUpdatedAt())
-                .walletsList(wallets)
-                .build();
-        // Set the user reference in each wallet
+    UserEntity toEntity(UserDomain domain);
+
+    @AfterMapping
+    default void linkWallets(UserDomain domain, @MappingTarget UserEntity.UserEntityBuilder userEntityBuilder) {
+        UserEntity userEntity = userEntityBuilder.build();
+
         if (userEntity.getWalletsList() != null) {
             userEntity.getWalletsList().forEach(wallet -> wallet.setUser(userEntity));
         }
-        return userEntity;
     }
 
     default UserDomain toDomain(UserEntity entity) {
