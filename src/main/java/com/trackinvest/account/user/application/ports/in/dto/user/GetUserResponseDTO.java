@@ -7,7 +7,7 @@ import java.util.UUID;
 public record GetUserResponseDTO(
         UUID id,
         String cognitoId,
-        String fullName,
+        String fullname,
         String email) {
 
     public static GetUserResponseDTO fromDomain(UserDomain user) {

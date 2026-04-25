@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-@Tag(name = "Auth", description = "Endpoints para gestión del login y autenticación")
+@Tag(name = "Auth", description = "Endpoints for authentication")
 public class AuthController {
 
     private final GenerateAuthUrlPort generateAuthUrlPort;
