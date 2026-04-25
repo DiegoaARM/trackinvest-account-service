@@ -16,156 +16,123 @@ Goals (what you will create):
 - Controller adapter (primary adapter)
 - Security configuration snippet
 
-Important: adapt package names and class names to your project conventions.
+## 1. Domain model
 
-1) Packages and naming
-- Base package: com.trackinvest.account.invoice
-- Domain: com.trackinvest.account.invoice.domain
-- DTOs: com.trackinvest.account.invoice.application.dto
-- Ports in: com.trackinvest.account.invoice.application.port.in
-- Ports out: com.trackinvest.account.invoice.application.port.out
-- Usecases: com.trackinvest.account.invoice.application.usecase
-- Mappers: com.trackinvest.account.invoice.application.mapper
-- Persistence entity and adapters: com.trackinvest.account.invoice.infrastructure.persistence
-- Controller: com.trackinvest.account.invoice.infrastructure.controller
+They are located in the `domain/models`. They represent business concepts and contain business logic. 
+We try to make the code as pure Java as possible, without lombok or other libraries.
 
-2) Domain model
+In the domain layer, there should be no public constructors. 
+Instead, there should be static methods that allow us to create the object instance. 
+These methods can be `create` and `from`, and they must contain the corresponding validations. 
 
-File: com.trackinvest.account.invoice.domain.Invoice.java
+Furthermore, setters should not be added unless absolutely necessary. 
+Instead, we will create functions that allow us to make a change to the object while simultaneously validating it, such as `changeFullName`.
 
-Example:
+````
+public class UserDomain {
 
-package com.trackinvest.account.invoice.domain;
-
-import java.math.BigDecimal;
-import java.util.UUID;
-
-public class Invoice {
-    private UUID id;
-    private UUID subscriptionId;
-    private UUID customerId;
-    private BigDecimal amount;
-    private InvoiceStatus status;
-
-    public Invoice() { }
-
-    public Invoice(UUID id, UUID subscriptionId, UUID customerId, BigDecimal amount, InvoiceStatus status) {
-        this.id = id;
-        this.subscriptionId = subscriptionId;
-        this.customerId = customerId;
-        this.amount = amount;
-        this.status = status;
+    private final UUID id;
+    private final String cognitoId;
+    private String fullname;
+    private final String email;
+    private final LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private List<WalletDomain> walletsList;
+    
+    private UserDomain(UUID id, String cognitoId, String fullname, String email, LocalDateTime createdAt, LocalDateTime updatedAt, List<WalletDomain> walletsList) {
+        this.id = Objects.requireNonNull(id, "ID is mandatory");
+        this.cognitoId = Objects.requireNonNull(cognitoId, "Cognito ID is mandatory");
+        this.fullname = Objects.requireNonNull(fullname, "fullname is mandatory");
+        this.email = Objects.requireNonNull(email, "Email is mandatory");
+        this.createdAt = Objects.requireNonNull(createdAt);
+        this.updatedAt = Objects.requireNonNull(updatedAt);
+        this.walletsList = Objects.requireNonNull(walletsList, "wallets is mandatory");
+    }
+    
+    public static UserDomain create(UUID id, String cognitoId, String fullname, String email, List<WalletDomain> walletsList) {
+        LocalDateTime now = LocalDateTime.now();
+        return new UserDomain(id, cognitoId, fullname, email, now, now, walletsList);
     }
 
-    public static Invoice create(UUID id, UUID subscriptionId, UUID customerId, BigDecimal amount) {
-        return new Invoice(id, subscriptionId, customerId, amount, InvoiceStatus.PENDING);
+    public static UserDomain create(UUID id, String cognitoId, String fullname, String email) {
+        LocalDateTime now = LocalDateTime.now();
+        return new UserDomain(id, cognitoId, fullname, email, now, now, new ArrayList<>());
+    }
+    
+    public static UserDomain from(UUID id, String cognitoId, String fullname, String email, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        return new UserDomain(id, cognitoId, fullname, email, createdAt, updatedAt, new ArrayList<>());
+    }
+    
+    public void changeFullname(String newfullname) {
+        this.fullname = Objects.requireNonNull(newfullname, "New fullname cannot be null");
+        this.updatedAt = LocalDateTime.now();
     }
 
-    // Getters / setters
-    public UUID getId() { return id; }
-    public void setId(UUID id) { this.id = id; }
-    public UUID getSubscriptionId() { return subscriptionId; }
-    public void setSubscriptionId(UUID subscriptionId) { this.subscriptionId = subscriptionId; }
-    public UUID getCustomerId() { return customerId; }
-    public void setCustomerId(UUID customerId) { this.customerId = customerId; }
-    public BigDecimal getAmount() { return amount; }
-    public void setAmount(BigDecimal amount) { this.amount = amount; }
-    public InvoiceStatus getStatus() { return status; }
-    public void setStatus(InvoiceStatus status) { this.status = status; }
-}
+    public void addWallet(WalletDomain newWallet) {
+        this.walletsList.add(newWallet);
+    }
+    
+    //getters ...
+````
 
-File: com.trackinvest.account.invoice.domain.InvoiceStatus.java
+## 2. JPA Entity
 
-public enum InvoiceStatus {
-    PENDING, PAID, CANCELED
-}
+They are located in the `infrastructure/adapter/out/persistence/entity`.
 
-3) JPA Entity
+They represent the database tables and are used by repositories to interact with the database.
+Here we can use some libraries like Lombok.
 
-File: com.trackinvest.account.invoice.infrastructure.persistence.InvoiceEntity.java
-
-Example:
-
-package com.trackinvest.account.invoice.infrastructure.persistence;
-
-import jakarta.persistence.*;
-import java.math.BigDecimal;
-import java.util.UUID;
-
+```
 @Entity
-@Table(name = "invoice")
-public class InvoiceEntity {
+@Table(name = "users")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class UserEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "subscription_id", nullable = false)
-    private UUID subscriptionId;
+    @Column(name = "cognito_id",nullable = false, unique = true)
+    private String cognitoId;
 
-    @Column(name = "customer_id", nullable = false)
-    private UUID customerId;
+    @Column(nullable = false, length = 25)
+    private String fullname;
 
-    @Column(name = "amount", nullable = false)
-    private BigDecimal amount;
+    @Column(nullable = false, unique = true)
+    private String email;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
-    private com.trackinvest.account.invoice.domain.InvoiceStatus status;
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 
-    public static InvoiceEntity create(UUID id) {
-        InvoiceEntity e = new InvoiceEntity();
-        e.setId(id);
-        return e;
-    }
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
 
-    // Getters / setters
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<WalletEntity> walletsList = new ArrayList<>();
 }
+```
 
-4) DTOs
 
-Create request and response DTOs under application.dto.request and application.dto.response.
+## 3. DTOs
 
-File: com.trackinvest.account.invoice.application.dto.request.CreateInvoiceDTO.java
+They are located in the `application/ports/in/dto`.
 
-package com.trackinvest.account.invoice.application.dto.request;
+They are records used to transfer data between the infrastructure layer and the application layer.
 
-import java.math.BigDecimal;
-import java.util.UUID;
+DTOs must have data validation to comply with null-prescription practices. 
+This involves implementing constructors and setters with data validation.
 
-public class CreateInvoiceDTO {
-    private UUID customerId;
-    private BigDecimal amount;
-
-    public CreateInvoiceDTO() { }
-    public CreateInvoiceDTO(UUID customerId, BigDecimal amount) {
-        this.customerId = customerId; this.amount = amount;
-    }
-    public UUID getCustomerId() { return customerId; }
-    public void setCustomerId(UUID customerId) { this.customerId = customerId; }
-    public BigDecimal getAmount() { return amount; }
-    public void setAmount(BigDecimal amount) { this.amount = amount; }
+```
+public record GetUserResponseDTO(
+        UUID id,
+        String cognitoId,
+        String fullName,
+        String email) {
 }
-
-File: com.trackinvest.account.invoice.application.dto.response.InvoiceDTO.java
-
-package com.trackinvest.account.invoice.application.dto.response;
-
-import java.math.BigDecimal;
-import java.util.UUID;
-
-public class InvoiceDTO {
-    private UUID id;
-    private UUID customerId;
-    private BigDecimal amount;
-    private String status;
-
-    public InvoiceDTO() { }
-    public InvoiceDTO(UUID id, UUID customerId, BigDecimal amount, String status) {
-        this.id = id; this.customerId = customerId; this.amount = amount; this.status = status;
-    }
-    // getters / setters
-}
-
+```
 5) Domain exceptions
 
 Create meaningful domain exceptions extending the project's DomainException.
