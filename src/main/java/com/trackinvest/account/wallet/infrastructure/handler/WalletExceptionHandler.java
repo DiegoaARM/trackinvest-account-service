@@ -2,6 +2,7 @@ package com.trackinvest.account.wallet.infrastructure.handler;
 
 import com.trackinvest.account.common.application.dto.ApiResponse;
 import com.trackinvest.account.wallet.domain.exception.business.*;
+import com.trackinvest.account.wallet.domain.exception.format.WalletAmountInvalidException;
 import com.trackinvest.account.wallet.domain.exception.format.WalletNameInvalidException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -42,8 +43,8 @@ public class WalletExceptionHandler {
                 .body(ApiResponse.error(ex.getMessage(), null));
     }
 
-    @ExceptionHandler(WalletInvalidBalanceException.class)
-    public ResponseEntity<ApiResponse<Void>> handleWalletInvalidBalance(WalletInvalidBalanceException ex) {
+    @ExceptionHandler(WalletAmountInvalidException.class)
+    public ResponseEntity<ApiResponse<Void>> handleWalletInvalidBalance(WalletAmountInvalidException ex) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(ApiResponse.error(ex.getMessage(), null));

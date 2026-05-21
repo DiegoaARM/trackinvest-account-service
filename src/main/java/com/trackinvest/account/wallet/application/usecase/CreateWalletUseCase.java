@@ -3,7 +3,6 @@ package com.trackinvest.account.wallet.application.usecase;
 import com.trackinvest.account.wallet.application.ports.in.dto.CreateWalletRequestDTO;
 import com.trackinvest.account.wallet.application.ports.in.dto.GetWalletResponseDTO;
 import com.trackinvest.account.wallet.application.ports.in.service.CreateWalletPort;
-import com.trackinvest.account.user.application.ports.out.UserRepositoryPort;
 import com.trackinvest.account.wallet.application.ports.out.WalletRepositoryPort;
 import com.trackinvest.account.wallet.domain.exception.business.WalletMaxNumberException;
 import com.trackinvest.account.wallet.domain.exception.business.WalletNameDuplicateException;
@@ -18,7 +17,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CreateWalletUseCase implements CreateWalletPort {
 
-    private final UserRepositoryPort userRepository;
     private final WalletRepositoryPort walletRepository;
 
     @Override

@@ -8,6 +8,7 @@ import com.trackinvest.account.wallet.domain.exception.business.WalletNotFoundEx
 import com.trackinvest.account.wallet.domain.models.WalletDomain;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -19,6 +20,7 @@ public class DeleteWalletUseCase implements DeleteWalletPort {
     private final AuthorizationService authorizationService;
 
     @Override
+    @Transactional
     public void execute(UUID userId, UUID walletId) {
         validateRules(userId, walletId);
         walletRepository.delete(walletId);
