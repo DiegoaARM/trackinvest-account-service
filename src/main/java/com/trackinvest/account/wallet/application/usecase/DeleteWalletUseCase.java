@@ -1,5 +1,6 @@
 package com.trackinvest.account.wallet.application.usecase;
 
+import com.trackinvest.account.common.domain.service.AuthorizationService;
 import com.trackinvest.account.wallet.application.ports.in.service.DeleteWalletPort;
 import com.trackinvest.account.wallet.application.ports.out.WalletRepositoryPort;
 import com.trackinvest.account.wallet.domain.exception.business.WalletCannotDeleteLastException;
@@ -15,17 +16,20 @@ import java.util.UUID;
 public class DeleteWalletUseCase implements DeleteWalletPort {
 
     private final WalletRepositoryPort walletRepository;
+    private final AuthorizationService authorizationService;
 
     @Override
     public void execute(UUID userId, UUID walletId) {
+        validateRules(userId, walletId);
+        walletRepository.delete(walletId);
+    }
 
+    private void validateRules(UUID userId, UUID walletId) {
         WalletDomain wallet = walletRepository.findById(walletId)
                 .orElseThrow(WalletNotFoundException::new);
-
-        if (wallet.getUser().getWalletsList().size() <= 1) {
+        authorizationService.verifyOwner(userId, wallet.getUser().getId(), "wallet");
+        if (walletRepository.countByUserId(userId) <= 1) {
             throw new WalletCannotDeleteLastException();
         }
-
-        walletRepository.delete(walletId);
     }
 }
