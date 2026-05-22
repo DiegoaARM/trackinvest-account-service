@@ -26,17 +26,22 @@ public class WalletJpaAdapter implements WalletRepositoryPort {
     }
 
     @Override
+    public boolean existsById(UUID id) {
+        return walletRepository.existsById(id);
+    }
+
+    @Override
+    public boolean existsByNameAndUserId(String name, UUID userId) {
+        return walletRepository.existsByNameAndUserId(name, userId);
+    }
+
+    @Override
     public WalletDomain save(WalletDomain wallet) {
         return walletEntityMapper.toDomain(
                 walletRepository.save(
                         walletEntityMapper.toEntity(wallet)
                 )
         );
-    }
-
-    @Override
-    public boolean existsByNameAndUserId(String name, UUID userId) {
-        return walletRepository.existsByNameAndUserId(name, userId);
     }
 
     @Override

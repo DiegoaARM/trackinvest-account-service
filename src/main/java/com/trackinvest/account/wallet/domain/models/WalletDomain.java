@@ -1,7 +1,9 @@
 package com.trackinvest.account.wallet.domain.models;
 
 import com.trackinvest.account.user.domain.models.UserDomain;
+import com.trackinvest.account.wallet.domain.exception.business.WalletInsufficientBalanceException;
 import com.trackinvest.account.wallet.domain.models.valueobjects.CurrencyTypeEnum;
+import com.trackinvest.account.wallet.domain.rules.WalletAmountValidRule;
 import lombok.Builder;
 
 import java.math.BigDecimal;
@@ -52,6 +54,21 @@ public class WalletDomain {
         this.balance = Objects.requireNonNull(newBalance, "New balance cannot be null");
         this.updatedAt = LocalDateTime.now();
         return this.balance;
+    }
+
+    public void deposit(BigDecimal amount) {
+        WalletAmountValidRule.validate(amount);
+        this.balance = this.balance.add(amount);
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public void withdraw(BigDecimal amount) {
+        WalletAmountValidRule.validate(amount);
+        if (this.balance.compareTo(amount) < 0) {
+            throw new WalletInsufficientBalanceException();
+        }
+        this.balance = this.balance.subtract(amount);
+        this.updatedAt = LocalDateTime.now();
     }
 
     public void changeCurrency(CurrencyTypeEnum newCurrency) {

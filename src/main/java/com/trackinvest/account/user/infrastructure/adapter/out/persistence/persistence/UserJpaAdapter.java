@@ -25,6 +25,11 @@ public class UserJpaAdapter implements UserRepositoryPort {
     }
 
     @Override
+    public boolean existsById(UUID id) {
+        return userRepository.existsById(id);
+    }
+
+    @Override
     public Optional<UserDomain> findByIdWithWallets(UUID id) {
         return userRepository.findByIdWithWallets(id)
                 .map(userEntityMapper::toDomain);

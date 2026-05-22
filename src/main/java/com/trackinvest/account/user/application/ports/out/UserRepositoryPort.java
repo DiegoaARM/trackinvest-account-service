@@ -9,6 +9,8 @@ public interface UserRepositoryPort {
 
     Optional<UserDomain> findById(UUID id);
 
+    boolean existsById(UUID id);
+
     Optional<UserDomain> findByIdWithWallets(UUID id);
 
     Optional<UserDomain> findByEmail(String email);
