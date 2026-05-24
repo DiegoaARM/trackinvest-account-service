@@ -3,11 +3,9 @@ package com.trackinvest.account.wallet.application.usecase;
 import com.trackinvest.account.wallet.application.ports.in.dto.CreateWalletRequestDTO;
 import com.trackinvest.account.wallet.application.ports.in.dto.GetWalletResponseDTO;
 import com.trackinvest.account.wallet.application.ports.in.service.CreateWalletPort;
-import com.trackinvest.account.user.application.ports.out.UserRepositoryPort;
 import com.trackinvest.account.wallet.application.ports.out.WalletRepositoryPort;
-import com.trackinvest.account.user.domain.exception.business.UserNotFoundException;
+import com.trackinvest.account.wallet.domain.exception.business.WalletMaxNumberException;
 import com.trackinvest.account.wallet.domain.exception.business.WalletNameDuplicateException;
-import com.trackinvest.account.user.domain.models.UserDomain;
 import com.trackinvest.account.wallet.domain.models.WalletDomain;
 import com.trackinvest.account.wallet.domain.rules.WalletNameValidRule;
 import lombok.RequiredArgsConstructor;
@@ -19,15 +17,11 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CreateWalletUseCase implements CreateWalletPort {
 
-    private final UserRepositoryPort userRepository;
     private final WalletRepositoryPort walletRepository;
 
     @Override
     public GetWalletResponseDTO execute(UUID userId, CreateWalletRequestDTO wallet) {
-//        UserDomain user = userRepository.findByIdWithWallets(userId)
-//                .orElseThrow(UserNotFoundException::new);
-
-        WalletNameValidRule.validate(wallet.name());
+        validateRules(userId, wallet);
 
         if (walletRepository.existsByNameAndUserId(wallet.name(), userId)) {
             throw new WalletNameDuplicateException();
@@ -42,5 +36,19 @@ public class CreateWalletUseCase implements CreateWalletPort {
 
         WalletDomain savedWallet = walletRepository.save(walletDomain);
         return GetWalletResponseDTO.fromDomain(savedWallet);
+    }
+
+    private void validateRules(UUID userId, CreateWalletRequestDTO wallet) {
+
+        WalletNameValidRule.validate(wallet.name());
+
+        long currentWalletCount = walletRepository.countByUserId(userId);
+        if (currentWalletCount >= 10) {
+            throw new WalletMaxNumberException();
+        }
+
+        if (walletRepository.existsByNameAndUserId(wallet.name(), userId)) {
+            throw new WalletNameDuplicateException();
+        }
     }
 }
