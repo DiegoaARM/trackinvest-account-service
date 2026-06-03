@@ -1,9 +1,18 @@
 # 📈 TrackInvest - Backend API
 
+![Java CI](https://github.com/DiegoaARM/trackinvest-account-service/actions/workflows/ci.yml/badge.svg)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=DiegoaARM_trackinvest-account-service&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=DiegoaARM_trackinvest-account-service)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=DiegoaARM_trackinvest-account-service&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=DiegoaARM_trackinvest-account-service)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=DiegoaARM_trackinvest-account-service&metric=coverage)](https://sonarcloud.io/summary/new_code?id=DiegoaARM_trackinvest-account-service)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=DiegoaARM_trackinvest-account-service&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=DiegoaARM_trackinvest-account-service)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=DiegoaARM_trackinvest-account-service&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=DiegoaARM_trackinvest-account-service)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=DiegoaARM_trackinvest-account-service&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=DiegoaARM_trackinvest-account-service)
+
+
 **TrackInvest** es el núcleo de una plataforma de gestión de inversiones diseñada bajo estándares de buenas prácticas. El objetivo del proyecto es proporcionar una API escalable, segura y fácil de mantener para el seguimiento de activos financieros.
 
 ## 🛠️ Stack Tecnológico
-
+    
 * **Lenguaje:** Java 21 (LTS)
 * **Framework:** Spring Boot 4.0.1
 * **Arquitectura:** Hexagonal (Clean Architecture)
