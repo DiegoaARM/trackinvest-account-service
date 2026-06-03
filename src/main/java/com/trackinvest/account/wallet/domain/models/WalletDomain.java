@@ -4,6 +4,7 @@ import com.trackinvest.account.user.domain.models.UserDomain;
 import com.trackinvest.account.wallet.domain.exception.business.WalletInsufficientBalanceException;
 import com.trackinvest.account.wallet.domain.models.valueobjects.CurrencyTypeEnum;
 import com.trackinvest.account.wallet.domain.rules.WalletAmountValidRule;
+import com.trackinvest.account.wallet.domain.rules.WalletNameValidRule;
 import lombok.Builder;
 
 import java.math.BigDecimal;
@@ -46,6 +47,7 @@ public class WalletDomain {
     }
 
     public void changeName(String newName) {
+        WalletNameValidRule.validate(newName);
         this.name = Objects.requireNonNull(newName, "New name cannot be null");
         this.updatedAt = LocalDateTime.now();
     }
