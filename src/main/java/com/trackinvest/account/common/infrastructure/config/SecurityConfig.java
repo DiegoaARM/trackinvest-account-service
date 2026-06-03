@@ -39,7 +39,7 @@ public class SecurityConfig {
     public SecurityFilterChain security(HttpSecurity http) throws Exception {
         http
                 .cors(c -> c.configurationSource(cors()))
-                .csrf(c -> c.disable())
+                .csrf(c -> c.disable()) // CSRF desactivado porque usamos JWT stateless
                 .exceptionHandling(c -> c.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
