@@ -31,32 +31,29 @@ class CreateWalletUseCaseTest {
     private CreateWalletUseCase createWalletUseCase;
 
     private final UUID userId = UUID.randomUUID();
-    private final CreateWalletRequestDTO validRequest = new CreateWalletRequestDTO("My Wallet", CurrencyTypeEnum.USD);
+    private final CreateWalletRequestDTO request = new CreateWalletRequestDTO("My Wallet", CurrencyTypeEnum.USD);
 
     @Test
     void shouldCreateWalletSuccessfully() {
         when(walletRepository.countByUserId(userId)).thenReturn(1L);
-        when(walletRepository.existsByNameAndUserId(validRequest.name(), userId)).thenReturn(false);
+        when(walletRepository.existsByNameAndUserId(request.name(), userId)).thenReturn(false);
         when(walletRepository.save(any(WalletDomain.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        GetWalletResponseDTO response = createWalletUseCase.execute(userId, validRequest);
+        GetWalletResponseDTO response = createWalletUseCase.execute(userId, request);
 
         assertNotNull(response);
-        assertEquals(validRequest.name(), response.name());
-        assertEquals(validRequest.currency(), response.currency());
+        assertEquals(request.name(), response.name());
+        assertEquals(request.currency(), response.currency());
 
         ArgumentCaptor<WalletDomain> captor = ArgumentCaptor.forClass(WalletDomain.class);
         verify(walletRepository).save(captor.capture());
         WalletDomain saved = captor.getValue();
-        assertEquals(validRequest.name(), saved.getName());
-        assertEquals(validRequest.currency(), saved.getCurrency());
+        assertEquals(request.name(), saved.getName());
+        assertEquals(request.currency(), saved.getCurrency());
     }
 
     @Test
     void shouldThrowExceptionWhenNameIsInvalid() {
-        when(walletRepository.countByUserId(userId)).thenReturn(1L);
-        when(walletRepository.existsByNameAndUserId(validRequest.name(), userId)).thenReturn(false);
-
         CreateWalletRequestDTO invalidRequest = new CreateWalletRequestDTO("AB", CurrencyTypeEnum.USD);
 
         assertThrows(WalletNameInvalidException.class, () ->
@@ -70,7 +67,7 @@ class CreateWalletUseCaseTest {
         when(walletRepository.countByUserId(userId)).thenReturn(10L);
 
         assertThrows(WalletMaxNumberException.class, () ->
-                createWalletUseCase.execute(userId, validRequest));
+                createWalletUseCase.execute(userId, request));
 
         verify(walletRepository, never()).save(any());
     }
@@ -78,10 +75,10 @@ class CreateWalletUseCaseTest {
     @Test
     void shouldThrowExceptionWhenNameDuplicated() {
         when(walletRepository.countByUserId(userId)).thenReturn(1L);
-        when(walletRepository.existsByNameAndUserId(validRequest.name(), userId)).thenReturn(true);
+        when(walletRepository.existsByNameAndUserId(request.name(), userId)).thenReturn(true);
 
         assertThrows(WalletNameDuplicateException.class, () ->
-                createWalletUseCase.execute(userId, validRequest));
+                createWalletUseCase.execute(userId, request));
 
         verify(walletRepository, never()).save(any());
     }

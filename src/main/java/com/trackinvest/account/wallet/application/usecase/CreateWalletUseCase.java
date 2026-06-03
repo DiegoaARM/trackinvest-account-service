@@ -35,7 +35,7 @@ public class CreateWalletUseCase implements CreateWalletPort {
     }
 
     private void validateRules(UUID userId, CreateWalletRequestDTO wallet) {
-
+        WalletNameValidRule.validate(wallet.name());
         long currentWalletCount = walletRepository.countByUserId(userId);
         if (currentWalletCount >= 10) {
             throw new WalletMaxNumberException();
