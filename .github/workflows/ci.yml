@@ -1,8 +1,6 @@
 name: Advanced CI with SonarCloud
 
 on:
-  push:
-    branches: [ main, master, develop ]
   pull_request:
     branches: [ main, master, develop ]
 
@@ -59,7 +57,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}    # Mantener como variable por si el plugin la busca de fondo
         run: |
           ./mvnw clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:5.7.0.6970:sonar \
-            -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
+            -Dsonar.token=$SONAR_TOKEN \
             -Dsonar.organization=diegoaarm \
             -Dsonar.projectKey=DiegoaARM_trackinvest-account-service \
             -Dsonar.host.url=https://sonarcloud.io
