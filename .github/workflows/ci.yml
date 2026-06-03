@@ -1,8 +1,6 @@
 name: Advanced CI with SonarCloud
 
 on:
-  push:
-    branches: [ main, master, develop ]
   pull_request:
     branches: [ main, master, develop ]
 
