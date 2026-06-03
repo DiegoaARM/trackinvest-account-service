@@ -23,10 +23,6 @@ public class CreateWalletUseCase implements CreateWalletPort {
     public GetWalletResponseDTO execute(UUID userId, CreateWalletRequestDTO wallet) {
         validateRules(userId, wallet);
 
-        if (walletRepository.existsByNameAndUserId(wallet.name(), userId)) {
-            throw new WalletNameDuplicateException();
-        }
-
         WalletDomain walletDomain = WalletDomain.create(
                 UUID.randomUUID(),
                 wallet.name(),
