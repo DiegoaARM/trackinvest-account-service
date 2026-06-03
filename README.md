@@ -1,9 +1,11 @@
 # 📈 TrackInvest - Backend API
 
+[![Java CI](https://github.com/DiegoaARM/trackinvest-account-service/actions/workflows/ci.yml/badge. Cartwright)](https://github.com/DiegoaARM/trackinvest-account-service/actions)
+
 **TrackInvest** es el núcleo de una plataforma de gestión de inversiones diseñada bajo estándares de buenas prácticas. El objetivo del proyecto es proporcionar una API escalable, segura y fácil de mantener para el seguimiento de activos financieros.
 
 ## 🛠️ Stack Tecnológico
-
+    
 * **Lenguaje:** Java 21 (LTS)
 * **Framework:** Spring Boot 4.0.1
 * **Arquitectura:** Hexagonal (Clean Architecture)
