@@ -60,10 +60,8 @@ public class CognitoAuthAdapter implements IdentityProviderPort {
             throw new RuntimeException(e);
         }
 
-        HttpClient client = HttpClient.newHttpClient();
-
         HttpResponse<String> response;
-        try {
+        try (HttpClient client = HttpClient.newHttpClient()) {
             response = client.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
@@ -94,8 +92,10 @@ public class CognitoAuthAdapter implements IdentityProviderPort {
                     .POST(HttpRequest.BodyPublishers.noBody())
                     .build();
 
-            HttpClient client = HttpClient.newHttpClient();
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response;
+            try (HttpClient client = HttpClient.newHttpClient()) {
+                response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            }
 
             if (response.statusCode() != 200) {
                 throw new RuntimeException("Refresh failed. Error: " + response.body());
