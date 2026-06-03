@@ -1,16 +1,15 @@
-name: Java CI with Postgres
+name: CI
 
 on:
   push:
-    branches: [ main, master, develop ]
+    branches: [main, master, develop]
   pull_request:
-    branches: [ main, master, develop ]
+    branches: [main, master, develop]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
-#    # Esto levanta una base de datos temporal en la nube para tus pruebas
 #    services:
 #      postgres:
 #        image: postgres:16-alpine
@@ -37,11 +36,9 @@ jobs:
           distribution: temurin
           cache: maven
 
-      # Compila el código Java y ejecuta JUnit + Mockito + Tests de integración
       - name: Build and run tests
         run: ./mvnw clean verify --no-transfer-progress
 
-      # Si algo falla, te guarda los reportes para que los descargues desde GitHub
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4
