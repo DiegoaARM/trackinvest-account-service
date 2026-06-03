@@ -1,0 +1,51 @@
+name: Java CI with Postgres
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    # Esto levanta una base de datos temporal en la nube para tus pruebas
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: TrackInvest
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: admin
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: 21
+          distribution: temurin
+          cache: maven
+
+      # Compila el código Java y ejecuta JUnit + Mockito + Tests de integración
+      - name: Build and run tests
+        run: ./mvnw clean verify --no-transfer-progress
+
+      # Si algo falla, te guarda los reportes para que los descargues desde GitHub
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: target/surefire-reports/
+          retention-days: 7

@@ -23,10 +23,6 @@ public class CreateWalletUseCase implements CreateWalletPort {
     public GetWalletResponseDTO execute(UUID userId, CreateWalletRequestDTO wallet) {
         validateRules(userId, wallet);
 
-        if (walletRepository.existsByNameAndUserId(wallet.name(), userId)) {
-            throw new WalletNameDuplicateException();
-        }
-
         WalletDomain walletDomain = WalletDomain.create(
                 UUID.randomUUID(),
                 wallet.name(),
@@ -39,7 +35,7 @@ public class CreateWalletUseCase implements CreateWalletPort {
     }
 
     private void validateRules(UUID userId, CreateWalletRequestDTO wallet) {
-
+        WalletNameValidRule.validate(wallet.name());
         long currentWalletCount = walletRepository.countByUserId(userId);
         if (currentWalletCount >= 10) {
             throw new WalletMaxNumberException();
