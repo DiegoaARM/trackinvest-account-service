@@ -53,6 +53,6 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}    # El que guardaste en los Secrets
         run: |
           ./mvnw clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-            -Dsonar.organization=DiegoaARM \
+            -Dsonar.organization=diegoaarm \
             -Dsonar.projectKey=DiegoaARM_trackinvest-account-service \
             -Dsonar.host.url=https://sonarcloud.io
