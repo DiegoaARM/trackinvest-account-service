@@ -1,5 +1,7 @@
 package com.trackinvest.account.wallet.application.usecase;
 
+import com.trackinvest.account.common.domain.exception.ResourceAccessDeniedException;
+import com.trackinvest.account.common.domain.service.AuthorizationService;
 import com.trackinvest.account.user.domain.models.UserDomain;
 import com.trackinvest.account.wallet.application.ports.in.dto.GetWalletResponseDTO;
 import com.trackinvest.account.wallet.application.ports.in.dto.UpdateWalletRequestDTO;
@@ -30,6 +32,9 @@ class UpdateWalletUseCaseTest {
     @Mock
     private WalletRepositoryPort walletRepository;
 
+    @Mock
+    private AuthorizationService authorizationService;
+
     @InjectMocks
     private UpdateWalletUseCase updateWalletUseCase;
 
@@ -47,6 +52,7 @@ class UpdateWalletUseCaseTest {
         UpdateWalletRequestDTO request = new UpdateWalletRequestDTO("New Name");
 
         when(walletRepository.findById(walletId)).thenReturn(Optional.of(wallet));
+        doNothing().when(authorizationService).verifyOwner(userId, userId, "wallet");
         when(walletRepository.existsByNameAndUserId(request.name(), userId)).thenReturn(false);
         when(walletRepository.save(any(WalletDomain.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
@@ -97,6 +103,7 @@ class UpdateWalletUseCaseTest {
         UpdateWalletRequestDTO request = new UpdateWalletRequestDTO("Existing Name");
 
         when(walletRepository.findById(walletId)).thenReturn(Optional.of(wallet));
+        doNothing().when(authorizationService).verifyOwner(userId, userId, "wallet");
         when(walletRepository.existsByNameAndUserId(request.name(), userId)).thenReturn(true);
 
         assertThrows(WalletNameDuplicateException.class, () ->
@@ -116,6 +123,7 @@ class UpdateWalletUseCaseTest {
         UpdateWalletRequestDTO request = new UpdateWalletRequestDTO("Same Name");
 
         when(walletRepository.findById(walletId)).thenReturn(Optional.of(wallet));
+        doNothing().when(authorizationService).verifyOwner(userId, userId, "wallet");
         when(walletRepository.save(any(WalletDomain.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         GetWalletResponseDTO response = updateWalletUseCase.execute(userId, walletId, request);
@@ -123,5 +131,26 @@ class UpdateWalletUseCaseTest {
         assertEquals("Same Name", response.name());
         verify(walletRepository, never()).existsByNameAndUserId(any(), any());
         verify(walletRepository).save(wallet);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenUserIsNotOwner() {
+        UUID otherUserId = UUID.randomUUID();
+        UserDomain otherUser = UserDomain.create(otherUserId);
+        WalletDomain wallet = WalletDomain.from(
+                walletId, "Old Name", otherUser, BigDecimal.valueOf(100),
+                CurrencyTypeEnum.USD, LocalDateTime.now(), LocalDateTime.now()
+        );
+
+        UpdateWalletRequestDTO request = new UpdateWalletRequestDTO("New Name");
+
+        when(walletRepository.findById(walletId)).thenReturn(Optional.of(wallet));
+        doThrow(new ResourceAccessDeniedException("wallet"))
+                .when(authorizationService).verifyOwner(otherUserId, userId, "wallet");
+
+        assertThrows(ResourceAccessDeniedException.class, () ->
+                updateWalletUseCase.execute(userId, walletId, request));
+
+        verify(walletRepository, never()).save(any());
     }
 }

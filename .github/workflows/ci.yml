@@ -2,9 +2,11 @@ name: Java CI with Postgres
 
 on:
   push:
-    branches: [ main, master, develop ]
+    branches:
+      - '**'
   pull_request:
-    branches: [ main, master, develop ]
+    branches:
+      - '**'
 
 jobs:
   build:
