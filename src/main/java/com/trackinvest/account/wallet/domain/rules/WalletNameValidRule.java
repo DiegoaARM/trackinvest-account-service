@@ -1,10 +1,12 @@
 package com.trackinvest.account.wallet.domain.rules;
 
 import com.trackinvest.account.wallet.domain.exception.format.WalletNameInvalidException;
-import org.springframework.stereotype.Service;
 
-@Service
+
 public class WalletNameValidRule {
+
+    private WalletNameValidRule() {}
+
     public static void validate(String name) {
         if (name == null || name.trim().isEmpty()) {
             throw new WalletNameInvalidException();

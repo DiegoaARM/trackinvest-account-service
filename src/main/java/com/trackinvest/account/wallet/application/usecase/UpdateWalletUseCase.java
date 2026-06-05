@@ -8,7 +8,6 @@ import com.trackinvest.account.wallet.application.ports.out.WalletRepositoryPort
 import com.trackinvest.account.wallet.domain.exception.business.WalletNameDuplicateException;
 import com.trackinvest.account.wallet.domain.exception.business.WalletNotFoundException;
 import com.trackinvest.account.wallet.domain.models.WalletDomain;
-import com.trackinvest.account.wallet.domain.rules.WalletNameValidRule;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,10 +38,10 @@ public class UpdateWalletUseCase implements UpdateWalletPort {
     private void validateRules(UUID userId, WalletDomain wallet, UpdateWalletRequestDTO request) {
         authorizationService.verifyOwner(wallet.getUser().getId(), userId, "wallet");
 
-        if (request.name() != null && !request.name().equals(wallet.getName())) {
-            if (walletRepository.existsByNameAndUserId(request.name(), userId)) {
-                throw new WalletNameDuplicateException();
-            }
+        if (request.name() != null
+                && !request.name().equals(wallet.getName())
+                && walletRepository.existsByNameAndUserId(request.name(), userId)) {
+            throw new WalletNameDuplicateException();
         }
     }
 }

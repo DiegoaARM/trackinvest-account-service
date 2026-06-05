@@ -13,7 +13,7 @@ public class UserDomain {
     private final String email;
     private final LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    final private List<WalletDomain> walletsList;
+    private final List<WalletDomain> walletsList;
 
     private UserDomain(UUID id, String cognitoId, String fullname, String email, LocalDateTime createdAt, LocalDateTime updatedAt, List<WalletDomain> walletsList) {
         this.id = Objects.requireNonNull(id, "ID is mandatory");
