@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +28,6 @@ public class GetAllWalletsUseCase implements GetAllWalletsPort {
         return walletRepository.findByUserId(userId)
                 .stream()
                 .map(GetWalletResponseDTO::fromDomain)
-                .collect(Collectors.toList());
+                .toList();
     }
 }
