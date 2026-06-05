@@ -55,6 +55,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Lo provee GitHub automáticamente
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}    # Mantener como variable por si el plugin la busca de fondo
+
+          COGNITO_JWK_SET_URI: ${{ secrets.COGNITO_JWK_SET_URI }}
+          COGNITO_ISSUER_URI: ${{ secrets.COGNITO_ISSUER_URI }}
+          COGNITO_CLIENT_ID: ${{ secrets.COGNITO_CLIENT_ID }}
+          COGNITO_CLIENT_SECRET: ${{ secrets.COGNITO_CLIENT_SECRET }}
+          COGNITO_URI: ${{ secrets.COGNITO_URI }}
         run: |
           ./mvnw clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:5.7.0.6970:sonar \
             -Dsonar.token=$SONAR_TOKEN \
