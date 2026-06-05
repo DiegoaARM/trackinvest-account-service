@@ -5,16 +5,12 @@ import com.trackinvest.account.wallet.application.ports.in.dto.GetWalletResponse
 import com.trackinvest.account.wallet.application.ports.in.dto.UpdateWalletBalanceRequestDTO;
 import com.trackinvest.account.wallet.application.ports.in.service.UpdateWalletBalancePort;
 import com.trackinvest.account.wallet.application.ports.out.WalletRepositoryPort;
-import com.trackinvest.account.wallet.domain.exception.format.WalletAmountInvalidException;
-import com.trackinvest.account.wallet.domain.exception.business.WalletInsufficientBalanceException;
 import com.trackinvest.account.wallet.domain.exception.business.WalletNotFoundException;
 import com.trackinvest.account.wallet.domain.models.WalletDomain;
-import com.trackinvest.account.wallet.domain.rules.WalletAmountValidRule;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.UUID;
 
 @Service
@@ -30,7 +26,7 @@ public class UpdateWalletBalanceUseCase implements UpdateWalletBalancePort {
         WalletDomain wallet = walletRepository.findById(walletId)
                 .orElseThrow(WalletNotFoundException::new);
 
-        validateRules(userId, wallet, request);
+        validateRules(userId, wallet);
 
         if (request.isDeposit()) {
             wallet.deposit(request.amount());
@@ -42,7 +38,7 @@ public class UpdateWalletBalanceUseCase implements UpdateWalletBalancePort {
         return GetWalletResponseDTO.fromDomain(savedWallet);
     }
 
-    private void validateRules(UUID userId, WalletDomain wallet, UpdateWalletBalanceRequestDTO request) {
+    private void validateRules(UUID userId, WalletDomain wallet) {
         authorizationService.verifyOwner(wallet.getUser().getId(), userId, "wallet");
     }
 }
