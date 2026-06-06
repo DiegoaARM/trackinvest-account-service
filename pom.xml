@@ -127,6 +127,12 @@
 						</goals>
 					</execution>
 				</executions>
+				<configuration>
+					<excludes>
+						<exclude>**/infrastructure/**/*</exclude>
+
+					</excludes>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
