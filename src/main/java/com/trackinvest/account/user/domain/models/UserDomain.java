@@ -1,6 +1,7 @@
 package com.trackinvest.account.user.domain.models;
 
 import com.trackinvest.account.user.domain.rules.UserNameValidRule;
+import com.trackinvest.account.user.domain.rules.UserValidatorRule;
 import com.trackinvest.account.wallet.domain.models.WalletDomain;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -37,7 +38,8 @@ public class UserDomain {
 
     public static UserDomain create(UUID id, String cognitoId, String fullname, String email) {
         LocalDateTime now = LocalDateTime.now();
-        return new UserDomain(id, cognitoId, fullname, email, now, now, new ArrayList<>());
+        UserDomain user = new UserDomain(id, cognitoId, fullname, email, now, now, new ArrayList<>());
+        return new UserValidatorRule().validate(user);
     }
 
     public static UserDomain create(UUID id) {
@@ -73,6 +75,12 @@ public class UserDomain {
     }
     public String getEmail() {
         return email;
+    }
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
     public List<WalletDomain> getWalletsList() {
         return walletsList;
