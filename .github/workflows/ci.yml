@@ -69,3 +69,4 @@ jobs:
             -Dsonar.organization=diegoaarm \
             -Dsonar.projectKey=DiegoaARM_trackinvest-account-service \
             -Dsonar.host.url=https://sonarcloud.io
+            -Dsonar.qualitygate.wait=true
