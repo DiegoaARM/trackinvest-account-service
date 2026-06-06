@@ -5,6 +5,7 @@ import com.trackinvest.account.wallet.domain.exception.business.WalletInsufficie
 import com.trackinvest.account.wallet.domain.models.valueobjects.CurrencyTypeEnum;
 import com.trackinvest.account.wallet.domain.rules.WalletAmountValidRule;
 import com.trackinvest.account.wallet.domain.rules.WalletNameValidRule;
+import com.trackinvest.account.wallet.domain.rules.WalletValidatorRule;
 import lombok.Builder;
 
 import java.math.BigDecimal;
@@ -35,7 +36,8 @@ public class WalletDomain {
 
     public static WalletDomain create(UUID id, String name, UUID userId, CurrencyTypeEnum currency) {
         LocalDateTime now = LocalDateTime.now();
-        return new WalletDomain(id, name, UserDomain.create(userId), BigDecimal.ZERO, currency, now, now);
+        WalletDomain wallet = new WalletDomain(id, name, UserDomain.create(userId), BigDecimal.ZERO, currency, now, now);
+        return new WalletValidatorRule().validate(wallet);
     }
 
     public static WalletDomain from(UUID id, String name, UserDomain user, BigDecimal balance, CurrencyTypeEnum currency, LocalDateTime createdAt, LocalDateTime updatedAt) {
@@ -52,12 +54,6 @@ public class WalletDomain {
         this.updatedAt = LocalDateTime.now();
     }
 
-    public BigDecimal changeBalance(BigDecimal newBalance) {
-        this.balance = Objects.requireNonNull(newBalance, "New balance cannot be null");
-        this.updatedAt = LocalDateTime.now();
-        return this.balance;
-    }
-
     public void deposit(BigDecimal amount) {
         WalletAmountValidRule.validate(amount);
         this.balance = this.balance.add(amount);
@@ -70,11 +66,6 @@ public class WalletDomain {
             throw new WalletInsufficientBalanceException();
         }
         this.balance = this.balance.subtract(amount);
-        this.updatedAt = LocalDateTime.now();
-    }
-
-    public void changeCurrency(CurrencyTypeEnum newCurrency) {
-        this.currency = Objects.requireNonNull(newCurrency, "New currency cannot be null");
         this.updatedAt = LocalDateTime.now();
     }
 

@@ -35,11 +35,6 @@ public class UserDomain {
         this.walletsList = new ArrayList<>();
     }
 
-    public static UserDomain create(UUID id, String cognitoId, String fullname, String email, List<WalletDomain> walletsList) {
-        LocalDateTime now = LocalDateTime.now();
-        return new UserDomain(id, cognitoId, fullname, email, now, now, walletsList);
-    }
-
     public static UserDomain create(UUID id, String cognitoId, String fullname, String email) {
         LocalDateTime now = LocalDateTime.now();
         return new UserDomain(id, cognitoId, fullname, email, now, now, new ArrayList<>());
@@ -78,12 +73,6 @@ public class UserDomain {
     }
     public String getEmail() {
         return email;
-    }
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
     }
     public List<WalletDomain> getWalletsList() {
         return walletsList;
