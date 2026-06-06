@@ -18,9 +18,6 @@ public class UserExceptionHandler {
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ApiResponse<Void>> handleAuthentication(AuthenticationException ex) {
         System.err.println("Auth Technical Fail: " + ex.getMessage());
-        if (ex.getCause() != null) {
-            ex.getCause().printStackTrace();
-        }
 
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
