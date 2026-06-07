@@ -141,7 +141,7 @@ File: com.trackinvest.account.invoice.domain.exception.InvoiceNotFoundException.
 
 package com.trackinvest.account.invoice.domain.exception;
 
-import com.trackinvest.account.common.domain.exception.DomainException;
+import com.trackinvest.account.common.domain.exception.TrackinvestException;
 
 public class InvoiceNotFoundException extends DomainException {
     private static final long serialVersionUID = 1L;
