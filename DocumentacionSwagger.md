@@ -30,5 +30,4 @@ DOCUMENTACIÓN SWAGGER
                     @Tag(name = "Authentication", description = "Endpoints for user authentication")
 
 5. PROBAR LA DOCUMENTACIÓN:
-            - Iniciar la aplicación y acceder a la URL http://localhost:8080/swa
-            gger-ui/index.html
+            - Iniciar la aplicación y acceder a la URL http://localhost:8080/swagger-ui/index.html

@@ -40,11 +40,11 @@ public class SecurityConfig {
         http
                 .cors(c -> c.configurationSource(cors()))
                 .csrf(c -> c.disable()) // CSRF desactivado porque usamos JWT stateless
-                .exceptionHandling(c -> c.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**", "/public/**",
-                                "/v3/api-docs/**","/swagger-ui/**", "/swagger-ui.html").permitAll()
+                                "/v3/api-docs/**","/swagger-ui/**", "/swagger-ui.html",
+                                "/actuator/**").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS).permitAll()
                         .anyRequest().authenticated()
                 )

@@ -1,9 +1,11 @@
 package com.trackinvest.account.wallet.application.usecase;
 
+import com.trackinvest.account.common.application.ports.out.EventPublisherPort;
 import com.trackinvest.account.wallet.application.ports.in.dto.CreateWalletRequestDTO;
 import com.trackinvest.account.wallet.application.ports.in.dto.GetWalletResponseDTO;
 import com.trackinvest.account.wallet.application.ports.in.service.CreateWalletPort;
 import com.trackinvest.account.wallet.application.ports.out.WalletRepositoryPort;
+import com.trackinvest.account.wallet.domain.event.WalletCreatedEvent;
 import com.trackinvest.account.wallet.domain.exception.business.WalletMaxNumberException;
 import com.trackinvest.account.wallet.domain.exception.business.WalletNameDuplicateException;
 import com.trackinvest.account.wallet.domain.models.WalletDomain;
@@ -18,6 +20,7 @@ import java.util.UUID;
 public class CreateWalletUseCase implements CreateWalletPort {
 
     private final WalletRepositoryPort walletRepository;
+    private final EventPublisherPort eventPublisher;
 
     @Override
     public GetWalletResponseDTO execute(UUID userId, CreateWalletRequestDTO wallet) {
@@ -31,6 +34,15 @@ public class CreateWalletUseCase implements CreateWalletPort {
         );
 
         WalletDomain savedWallet = walletRepository.save(walletDomain);
+
+        eventPublisher.publish(new WalletCreatedEvent(
+                savedWallet.getId().toString(),
+                userId.toString(),
+                savedWallet.getName(),
+                savedWallet.getCurrency().name(),
+                savedWallet.getBalance()
+        ));
+
         return GetWalletResponseDTO.fromDomain(savedWallet);
     }
 

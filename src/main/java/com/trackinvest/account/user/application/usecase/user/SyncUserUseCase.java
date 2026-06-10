@@ -1,7 +1,9 @@
 package com.trackinvest.account.user.application.usecase.user;
 
+import com.trackinvest.account.common.application.ports.out.EventPublisherPort;
 import com.trackinvest.account.user.application.ports.in.service.user.SyncUserPort;
 import com.trackinvest.account.user.application.ports.out.UserRepositoryPort;
+import com.trackinvest.account.user.domain.event.UserCreatedEvent;
 import com.trackinvest.account.user.domain.models.UserDomain;
 import com.trackinvest.account.wallet.domain.models.WalletDomain;
 import com.trackinvest.account.wallet.domain.models.valueobjects.CurrencyTypeEnum;
@@ -15,6 +17,7 @@ import java.util.UUID;
 public class SyncUserUseCase implements SyncUserPort {
 
     private final UserRepositoryPort userRepository;
+    private final EventPublisherPort eventPublisher;
 
     @Override
     public void execute(String cognitoId, String email, String fullname) {
@@ -33,10 +36,16 @@ public class SyncUserUseCase implements SyncUserPort {
                 UUID.randomUUID(),
                 "Initial Wallet",
                 newUser.getId(),
-                CurrencyTypeEnum.USD //initial currency
+                CurrencyTypeEnum.USD
         );
 
         newUser.addWallet(initialWallet);
         userRepository.save(newUser);
+
+        eventPublisher.publish(new UserCreatedEvent(
+                newUser.getId().toString(),
+                newUser.getEmail(),
+                newUser.getFullname()
+        ));
     }
 }
