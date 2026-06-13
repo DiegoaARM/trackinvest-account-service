@@ -1,5 +1,6 @@
 package com.trackinvest.account.wallet.application.usecase;
 
+import com.trackinvest.account.common.application.ports.out.EventPublisherPort;
 import com.trackinvest.account.wallet.application.ports.in.dto.CreateWalletRequestDTO;
 import com.trackinvest.account.wallet.application.ports.in.dto.GetWalletResponseDTO;
 import com.trackinvest.account.wallet.application.ports.out.WalletRepositoryPort;
@@ -26,6 +27,9 @@ class CreateWalletUseCaseTest {
 
     @Mock
     private WalletRepositoryPort walletRepository;
+
+    @Mock
+    private EventPublisherPort eventPublisher;
 
     @InjectMocks
     private CreateWalletUseCase createWalletUseCase;
