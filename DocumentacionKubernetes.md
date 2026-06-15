@@ -21,33 +21,33 @@
 El despliegue en Kubernetes del **TrackInvest Account Service** consta de 3 componentes principales que se ejecutan dentro del namespace `trackinvest`:
 
 ```
-┌─────────────────────────────────────────────────────┐
-│                   Kubernetes Cluster                 │
-│                                                      │
-│  ┌──────────────┐    ┌──────────────┐               │
-│  │   Postgres   │    │   RabbitMQ   │               │
-│  │  (Deployment)│    │  (Deployment) │               │
-│  │   replicas:1 │    │   replicas:1 │               │
-│  └──────┬───────┘    └──────┬───────┘               │
-│         │                   │                        │
-│  ┌──────┴───────┐    ┌──────┴───────┐               │
-│  │ postgres-svc │    │ rabbitmq-svc │               │
-│  │  ClusterIP   │    │  ClusterIP   │               │
-│  │   puerto:5432│    │  5672, 15672 │               │
-│  └──────────────┘    └──────────────┘               │
-│                                                      │
-│  ┌──────────────────────────────────────────┐       │
-│  │        Account Service (Deployment)       │       │
-│  │              replicas: 2                   │       │
-│  │        env: ConfigMap + Secret             │       │
-│  └──────────────────┬───────────────────────┘       │
-│                     │                                │
-│  ┌──────────────────┴───────────────────────┐       │
-│  │         account-service-svc              │       │
-│  │              ClusterIP                    │       │
-│  │              puerto: 8080                 │       │
-│  └──────────────────────────────────────────┘       │
-└─────────────────────────────────────────────────────┘
+┌───────────────────────────────────────────────────┐
+│                   Kubernetes Cluster              │
+│                                                   │
+│  ┌──────────────┐    ┌──────────────┐             │
+│  │   Postgres   │    │   RabbitMQ   │             │
+│  │  (Deployment)│    │  (Deployment)│             │
+│  │   replicas:1 │    │   replicas:1 │             │
+│  └──────┬───────┘    └──────┬───────┘             │
+│         │                   │                     │
+│  ┌──────┴───────┐    ┌──────┴───────┐             │
+│  │ postgres-svc │    │ rabbitmq-svc │             │
+│  │  ClusterIP   │    │  ClusterIP   │             │
+│  │   puerto:5432│    │  5672, 15672 │             │
+│  └──────────────┘    └──────────────┘             │
+│                                                   │
+│  ┌──────────────────────────────────────────┐     │
+│  │        Account Service (Deployment)      │     │
+│  │              replicas: 2                 │     │
+│  │        env: ConfigMap + Secret           │     │
+│  └──────────────────┬───────────────────────┘     │
+│                     │                             │
+│  ┌──────────────────┴───────────────────────┐     │
+│  │         account-service-svc              │     │
+│  │              ClusterIP                   │     │
+│  │              puerto: 8080                │     │
+│  └──────────────────────────────────────────┘     │
+└───────────────────────────────────────────────────┘
 ```
 
 ---
