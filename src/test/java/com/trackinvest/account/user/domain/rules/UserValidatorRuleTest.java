@@ -3,6 +3,8 @@ package com.trackinvest.account.user.domain.rules;
 import com.trackinvest.account.common.domain.exception.RequiredAttributeException;
 import com.trackinvest.account.user.domain.models.UserDomain;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -10,17 +12,19 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class UserValidatorRuleTest {
 
     private final UserValidatorRule validator = new UserValidatorRule();
     private final UUID id = UUID.randomUUID();
     private final LocalDateTime now = LocalDateTime.now();
-    private final UserDomain validUser = UserDomain.from(id, "cognito-123", "Test User", "email@test.com", now, now, new ArrayList<>());
 
     @Test
     void shouldPassForValidUser() {
-        assertDoesNotThrow(() -> validator.validate(validUser));
+        UserDomain user = UserDomain.from(id, "cognito-123", "Test User", "email@test.com", now, now, new ArrayList<>());
+        assertDoesNotThrow(() -> validator.validate(user));
     }
 
     @Test
@@ -29,50 +33,109 @@ class UserValidatorRuleTest {
     }
 
     @Test
+    void shouldThrowWhenIdIsNull() {
+        var user = mock(UserDomain.class);
+        when(user.getId()).thenReturn(null);
+
+        assertThrows(RequiredAttributeException.class, () -> validator.validate(user));
+    }
+
+    @Test
     void shouldThrowWhenCognitoIdIsNull() {
-        UserDomain user = UserDomain.create(id);
+        var user = mock(UserDomain.class);
+        when(user.getId()).thenReturn(id);
+        when(user.getCognitoId()).thenReturn(null);
+
         assertThrows(RequiredAttributeException.class, () -> validator.validate(user));
     }
 
     @Test
     void shouldThrowWhenCognitoIdIsBlank() {
-        UserDomain user = UserDomain.from(id, "   ", "Test User", "email@test.com", now, now, new ArrayList<>());
+        var user = mock(UserDomain.class);
+        when(user.getId()).thenReturn(id);
+        when(user.getCognitoId()).thenReturn("   ");
+
         assertThrows(RequiredAttributeException.class, () -> validator.validate(user));
     }
 
     @Test
     void shouldThrowWhenFullnameIsNull() {
-        UserDomain user = UserDomain.create(id);
+        var user = mock(UserDomain.class);
+        when(user.getId()).thenReturn(id);
+        when(user.getCognitoId()).thenReturn("cognito-123");
+        when(user.getFullname()).thenReturn(null);
+
         assertThrows(RequiredAttributeException.class, () -> validator.validate(user));
     }
 
     @Test
     void shouldThrowWhenFullnameIsBlank() {
-        UserDomain user = UserDomain.from(id, "cognito-123", "   ", "email@test.com", now, now, new ArrayList<>());
+        var user = mock(UserDomain.class);
+        when(user.getId()).thenReturn(id);
+        when(user.getCognitoId()).thenReturn("cognito-123");
+        when(user.getFullname()).thenReturn("   ");
+
         assertThrows(RequiredAttributeException.class, () -> validator.validate(user));
     }
 
     @Test
     void shouldThrowWhenEmailIsNull() {
-        UserDomain user = UserDomain.create(id);
+        var user = mock(UserDomain.class);
+        when(user.getId()).thenReturn(id);
+        when(user.getCognitoId()).thenReturn("cognito-123");
+        when(user.getFullname()).thenReturn("Test User");
+        when(user.getEmail()).thenReturn(null);
+
         assertThrows(RequiredAttributeException.class, () -> validator.validate(user));
     }
 
     @Test
     void shouldThrowWhenEmailIsBlank() {
-        UserDomain user = UserDomain.from(id, "cognito-123", "Test User", "   ", now, now, new ArrayList<>());
+        var user = mock(UserDomain.class);
+        when(user.getId()).thenReturn(id);
+        when(user.getCognitoId()).thenReturn("cognito-123");
+        when(user.getFullname()).thenReturn("Test User");
+        when(user.getEmail()).thenReturn("   ");
+
         assertThrows(RequiredAttributeException.class, () -> validator.validate(user));
     }
 
     @Test
     void shouldThrowWhenCreatedAtIsNull() {
-        UserDomain user = UserDomain.create(id);
+        var user = mock(UserDomain.class);
+        when(user.getId()).thenReturn(id);
+        when(user.getCognitoId()).thenReturn("cognito-123");
+        when(user.getFullname()).thenReturn("Test User");
+        when(user.getEmail()).thenReturn("email@test.com");
+        when(user.getCreatedAt()).thenReturn(null);
+
         assertThrows(RequiredAttributeException.class, () -> validator.validate(user));
     }
 
     @Test
     void shouldThrowWhenUpdatedAtIsNull() {
-        UserDomain user = UserDomain.create(id);
+        var user = mock(UserDomain.class);
+        when(user.getId()).thenReturn(id);
+        when(user.getCognitoId()).thenReturn("cognito-123");
+        when(user.getFullname()).thenReturn("Test User");
+        when(user.getEmail()).thenReturn("email@test.com");
+        when(user.getCreatedAt()).thenReturn(now);
+        when(user.getUpdatedAt()).thenReturn(null);
+
+        assertThrows(RequiredAttributeException.class, () -> validator.validate(user));
+    }
+
+    @Test
+    void shouldThrowWhenWalletsListIsNull() {
+        var user = mock(UserDomain.class);
+        when(user.getId()).thenReturn(id);
+        when(user.getCognitoId()).thenReturn("cognito-123");
+        when(user.getFullname()).thenReturn("Test User");
+        when(user.getEmail()).thenReturn("email@test.com");
+        when(user.getCreatedAt()).thenReturn(now);
+        when(user.getUpdatedAt()).thenReturn(now);
+        when(user.getWalletsList()).thenReturn(null);
+
         assertThrows(RequiredAttributeException.class, () -> validator.validate(user));
     }
 }
