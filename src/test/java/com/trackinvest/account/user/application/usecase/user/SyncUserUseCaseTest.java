@@ -1,5 +1,6 @@
 package com.trackinvest.account.user.application.usecase.user;
 
+import com.trackinvest.account.common.application.ports.out.EventPublisherPort;
 import com.trackinvest.account.user.application.ports.out.UserRepositoryPort;
 import com.trackinvest.account.user.domain.models.UserDomain;
 import com.trackinvest.account.wallet.domain.models.valueobjects.CurrencyTypeEnum;
@@ -19,6 +20,9 @@ class SyncUserUseCaseTest {
 
     @Mock
     private UserRepositoryPort userRepository;
+
+    @Mock
+    private EventPublisherPort eventPublisher;
 
     @InjectMocks
     private SyncUserUseCase syncUserUseCase;

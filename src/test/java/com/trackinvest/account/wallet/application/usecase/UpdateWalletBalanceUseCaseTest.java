@@ -1,5 +1,6 @@
 package com.trackinvest.account.wallet.application.usecase;
 
+import com.trackinvest.account.common.application.ports.out.EventPublisherPort;
 import com.trackinvest.account.common.domain.exception.ResourceAccessDeniedException;
 import com.trackinvest.account.common.domain.service.AuthorizationService;
 import com.trackinvest.account.user.domain.models.UserDomain;
@@ -34,6 +35,9 @@ class UpdateWalletBalanceUseCaseTest {
 
     @Mock
     private AuthorizationService authorizationService;
+
+    @Mock
+    private EventPublisherPort eventPublisher;
 
     @InjectMocks
     private UpdateWalletBalanceUseCase updateWalletBalanceUseCase;
