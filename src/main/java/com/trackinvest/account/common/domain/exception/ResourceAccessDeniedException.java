@@ -1,6 +1,6 @@
 package com.trackinvest.account.common.domain.exception;
 
-public class ResourceAccessDeniedException extends DomainException {
+public class ResourceAccessDeniedException extends TrackinvestException {
     public ResourceAccessDeniedException(String resourceName) {
         super(String.format("You do not have permission to access or modify this %s.", resourceName));
     }
