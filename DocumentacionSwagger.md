@@ -1,18 +1,18 @@
 =============================================
-DOCUMENTACIÓN SWAGGER
+SWAGGER DOCUMENTATION
 =============================================
 
-1. AGREGAR LAS DEPENDENCIAS DE SWAGGER EN EL POM.XML:
-            - Agregar las siguientes dependencias en el pom.xml para habilitar Swagger en el proyecto:
+1. ADD SWAGGER DEPENDENCIES TO THE POM.XML:
+            - Add the following dependencies to the pom.xml to enable Swagger in the project:
                 <dependency>
                 	<groupId>org.springdoc</groupId>
                 	<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
                 	<version>2.3.0</version>
                 </dependency>
 
-2. CONFIGURAR SWAGGER EN EL PROYECTO:
-            - Crear una clase de configuración para Swagger, infrastructure/config/OpenApiConfig.java, y agregar las
-                anotaciones necesarias para configurar la documentación de la API. Por ejemplo:
+2. CONFIGURE SWAGGER IN THE PROJECT:
+            - Create a configuration class for Swagger, infrastructure/config/OpenApiConfig.java, and add the
+                necessary annotations to configure the API documentation. For example:
                         @Configuration
                         @OpenAPIDefinition(
                                 info = @Info(title = "InverTrack API", version = "v1"),
@@ -25,9 +25,9 @@ DOCUMENTACIÓN SWAGGER
                                 bearerFormat = "JWT"
                         )
 
-3. ANOTAR LOS CONTROLADORES Y ENDPOINTS:
-            - Agregar anotaciones de Swagger a los controladores y endpoints para describir su funcionalidad. Por ejemplo, en el AuthController:
+3. ANNOTATE THE CONTROLLERS AND ENDPOINTS:
+            - Add Swagger annotations to the controllers and endpoints to describe their functionality. For example, in the AuthController:
                     @Tag(name = "Authentication", description = "Endpoints for user authentication")
 
-5. PROBAR LA DOCUMENTACIÓN:
-            - Iniciar la aplicación y acceder a la URL http://localhost:8080/swagger-ui/index.html
+5. TEST THE DOCUMENTATION:
+            - Start the application and access the URL http://localhost:8080/swagger-ui/index.html

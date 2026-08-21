@@ -1,84 +1,84 @@
-# Resumen de Implementación - TrackInvest Usuarios y Billeteras
+# Implementation Summary - TrackInvest Users and Wallets
 
-## ✅ Funcionalidades Implementadas
+## ✅ Implemented Features
 
-### 1. **Consulta de Perfil Completo**
+### 1. **Full Profile Retrieval**
 - **Input Port:** `GetUserProfilePort`
 - **UseCase:** `GetUserProfileUseCase`
 - **DTO:** `GetUserProfileResponseDTO`
 - **Endpoint:** `GET /users/me/profile`
-- **Descripción:** Recupera el usuario con todas sus billeteras asociadas
-- **Manejo de errores:** Lanza `UserNotFoundException` si el usuario no existe
+- **Description:** Retrieves the user with all their associated wallets
+- **Error handling:** Throws `UserNotFoundException` if the user does not exist
 
-### 2. **Creación de Billetera Adicional**
-- **Input Port:** `CreateWalletPort` (actualizado)
-- **UseCase:** `CreateWalletUseCase` (mejorado)
+### 2. **Additional Wallet Creation**
+- **Input Port:** `CreateWalletPort` (updated)
+- **UseCase:** `CreateWalletUseCase` (improved)
 - **DTO:** `CreateWalletRequestDTO`
 - **Endpoint:** `POST /wallets`
-- **Validaciones:**
-  - Nombre de billetera: 3-25 caracteres (regla `NameWalletValidRule`)
-  - Unicidad del nombre por usuario
-- **Excepciones:**
-  - `WalletNameDuplicateException` (sin parámetro)
-  - `WalletNameInvalidException` (sin parámetro)
+- **Validations:**
+  - Wallet name: 3-25 characters (`NameWalletValidRule`)
+  - Name uniqueness per user
+- **Exceptions:**
+  - `WalletNameDuplicateException` (no parameter)
+  - `WalletNameInvalidException` (no parameter)
 
-### 3. **Actualización de Nombre de Billetera**
+### 3. **Wallet Name Update**
 - **Input Port:** `UpdateWalletPort`
 - **UseCase:** `UpdateWalletUseCase`
-- **DTO:** `UpdateWalletRequestDTO` (solo campo `name`)
+- **DTO:** `UpdateWalletRequestDTO` (only `name` field)
 - **Endpoint:** `PUT /wallets/{walletId}`
-- **Validaciones:**
-  - Verifica propiedad del usuario mediante `WalletSecurityService`
-  - Valida nombre (3-25 caracteres)
-  - Verifica unicidad del nuevo nombre
-- **Parámetro:** Requiere `cognitoId` del JWT
+- **Validations:**
+  - Verifies user ownership via `WalletSecurityService`
+  - Validates name (3-25 characters)
+  - Verifies uniqueness of the new name
+- **Parameter:** Requires `cognitoId` from the JWT
 
-### 4. **Actualización de Balance (Depositar/Retirar)**
+### 4. **Balance Update (Deposit/Withdraw)**
 - **Input Port:** `UpdateWalletBalancePort`
 - **UseCase:** `UpdateWalletBalanceUseCase`
-- **DTO:** `UpdateWalletBalanceRequestDTO` (campos: `amount`, `isDeposit`)
+- **DTO:** `UpdateWalletBalanceRequestDTO` (fields: `amount`, `isDeposit`)
 - **Endpoint:** `PUT /wallets/{walletId}/balance`
-- **Validaciones:**
-  - Verifica propiedad del usuario
-  - Cantidad mayor a cero
-  - Para retiros: verifica saldo disponible
-- **Excepciones:**
-  - `InvalidBalanceException` (cantidad <= 0)
-  - `InsufficientBalanceException` (saldo insuficiente para retiro)
-- **Lógica:** 
-  - Si `isDeposit=true`: suma la cantidad
-  - Si `isDeposit=false`: resta la cantidad
+- **Validations:**
+  - Verifies user ownership
+  - Amount greater than zero
+  - For withdrawals: verifies available balance
+- **Exceptions:**
+  - `InvalidBalanceException` (amount <= 0)
+  - `InsufficientBalanceException` (insufficient balance for withdrawal)
+- **Logic:** 
+  - If `isDeposit=true`: adds the amount
+  - If `isDeposit=false`: subtracts the amount
 
-### 5. **Eliminación de Billetera**
+### 5. **Wallet Deletion**
 - **Input Port:** `DeleteWalletPort`
 - **UseCase:** `DeleteWalletUseCase`
 - **Endpoint:** `DELETE /wallets/{walletId}`
-- **Validaciones:**
-  - Verifica propiedad del usuario
-  - No permite eliminar si es la única billetera
-- **Excepción:** `WalletCannotDeleteLastException` (sin parámetro)
-- **Parámetro:** Requiere `cognitoId` del JWT
+- **Validations:**
+  - Verifies user ownership
+  - Does not allow deletion if it is the only wallet
+- **Exception:** `WalletCannotDeleteLastException` (no parameter)
+- **Parameter:** Requires `cognitoId` from the JWT
 
-## 🔒 Seguridad - Servicio de Validación Reutilizable
+## 🔒 Security - Reusable Validation Service
 
-### `WalletSecurityPort` y `WalletSecurityService`
-**Ubicación:** `application/usecase/wallet/WalletSecurityService.java`
+### `WalletSecurityPort` and `WalletSecurityService`
+**Location:** `application/usecase/wallet/WalletSecurityService.java`
 
-Valida que el usuario (identificado por `cognitoId`) es el propietario de la billetera:
-- Busca la billetera por ID
-- Compara `cognitoId` del JWT con el del propietario
-- Lanza `WalletUnauthorizedException` si no coinciden
+Validates that the user (identified by `cognitoId`) is the owner of the wallet:
+- Looks up the wallet by ID
+- Compares the JWT's `cognitoId` with the owner's
+- Throws `WalletUnauthorizedException` if they do not match
 
-**Uso en:**
+**Used in:**
 - `UpdateWalletUseCase`
 - `UpdateWalletBalanceUseCase`
 - `DeleteWalletUseCase`
 
-**Ventaja:** Reutilizable y centralizado. Puedes usarlo en otras operaciones si es necesario.
+**Advantage:** Reusable and centralized. You can use it in other operations if needed.
 
-## 📋 Excepciones - Sin Parámetros (Mensaje Predefinido)
+## 📋 Exceptions - No Parameters (Predefined Message)
 
-### Excepciones de Billetera (business):
+### Wallet Exceptions (business):
 1. `WalletNameDuplicateException()` → "Wallet name already exists for this user"
 2. `WalletNameInvalidException()` → "Wallet name must be between 3 and 25 characters"
 3. `WalletCannotDeleteLastException()` → "Cannot delete the last wallet of a user"
@@ -87,63 +87,62 @@ Valida que el usuario (identificado por `cognitoId`) es el propietario de la bil
 6. `InsufficientBalanceException()` → "Insufficient balance to perform this withdrawal"
 7. `WalletNotFoundException()` → "The wallet was not found."
 
-## 🏗️ Arquitectura Hexagonal
+## 🏗️ Hexagonal Architecture
 
-### Domain (Puro)
-- `WalletDomain`: Métodos `changeName()`, `changeBalance()`, `changeCurrency()`
-- `NameWalletValidRule`: Validación de nombre (3-25 caracteres)
-- Excepciones en `domain/exception/wallet/business/`
+### Domain (Pure)
+- `WalletDomain`: Methods `changeName()`, `changeBalance()`, `changeCurrency()`
+- `NameWalletValidRule`: Name validation (3-25 characters)
+- Exceptions in `domain/exception/wallet/business/`
 
 ### Application (UseCases & Ports)
 - **Input Ports:** `CreateWalletPort`, `UpdateWalletPort`, `UpdateWalletBalancePort`, `DeleteWalletPort`, `GetUserProfilePort`
 - **Output Ports:** `WalletRepositoryPort`, `WalletSecurityPort`
-- **DTOs:** En `ports/in/dto/`
+- **DTOs:** In `ports/in/dto/`
 
 ### Infrastructure (Adapters)
-- **WalletJpaAdapter:** Implementa `WalletRepositoryPort`
-- **WalletRepository (JPA):** Métodos `existsByNameAndUserId()` para validaciones
+- **WalletJpaAdapter:** Implements `WalletRepositoryPort`
+- **WalletRepository (JPA):** Methods `existsByNameAndUserId()` for validations
 - **Controllers:** `WalletController`, `UserController`
 
-## 📝 Endpoints Disponibles
+## 📝 Available Endpoints
 
-### Usuarios
-- `GET /users/me` → Perfil básico del usuario
-- `GET /users/me/profile` → Perfil completo con billeteras
+### Users
+- `GET /users/me` → Basic user profile
+- `GET /users/me/profile` → Full profile with wallets
 
-### Billeteras
-- `POST /wallets` → Crear nueva billetera
-- `PUT /wallets/{walletId}` → Actualizar nombre
-- `PUT /wallets/{walletId}/balance` → Depositar o retirar
-- `DELETE /wallets/{walletId}` → Eliminar billetera
+### Wallets
+- `POST /wallets` → Create new wallet
+- `PUT /wallets/{walletId}` → Update name
+- `PUT /wallets/{walletId}/balance` → Deposit or withdraw
+- `DELETE /wallets/{walletId}` → Delete wallet
 
-## 🔑 Parámetros JWT
-Todos los endpoints protegidos requieren JWT con el claim `sub` (cognitoId)
+## 🔑 JWT Parameters
+All protected endpoints require a JWT with the `sub` claim (cognitoId)
 
-## ⚙️ Validaciones Implementadas
+## ⚙️ Implemented Validations
 
-| Validación | Ubicación | Excepción |
+| Validation | Location | Exception |
 |-----------|-----------|-----------|
-| Nombre 3-25 caracteres | `NameWalletValidRule` | `WalletNameInvalidException` |
-| Unicidad de nombre/usuario | `CreateWalletUseCase`, `UpdateWalletUseCase` | `WalletNameDuplicateException` |
-| Propiedad de billetera | `WalletSecurityService` | `WalletUnauthorizedException` |
+| Name 3-25 characters | `NameWalletValidRule` | `WalletNameInvalidException` |
+| Name/user uniqueness | `CreateWalletUseCase`, `UpdateWalletUseCase` | `WalletNameDuplicateException` |
+| Wallet ownership | `WalletSecurityService` | `WalletUnauthorizedException` |
 | Balance > 0 | `UpdateWalletBalanceUseCase` | `InvalidBalanceException` |
-| Saldo disponible (retiro) | `UpdateWalletBalanceUseCase` | `InsufficientBalanceException` |
-| No eliminar última billetera | `DeleteWalletUseCase` | `WalletCannotDeleteLastException` |
+| Available balance (withdrawal) | `UpdateWalletBalanceUseCase` | `InsufficientBalanceException` |
+| Cannot delete last wallet | `DeleteWalletUseCase` | `WalletCannotDeleteLastException` |
 
-## ✨ Características Destacadas
+## ✨ Highlights
 
-✅ **Todas las excepciones sin parámetros** - Mensaje predefinido en constructor
-✅ **Seguridad centralizada** - `WalletSecurityService` reutilizable
-✅ **Balance editable** - Depositar/Retirar dinero
-✅ **No editable currency** - Solo al crear billetera
-✅ **Controllers integrados** - Todos los endpoints configurados
-✅ **JWT en parámetro** - cognitoId extraído automáticamente del token
-✅ **Compilación exitosa** - ✓ BUILD SUCCESS
+✅ **All exceptions without parameters** - Predefined message in constructor
+✅ **Centralized security** - Reusable `WalletSecurityService`
+✅ **Editable balance** - Deposit/Withdraw money
+✅ **Currency not editable** - Only when creating the wallet
+✅ **Integrated controllers** - All endpoints configured
+✅ **JWT as parameter** - cognitoId automatically extracted from the token
+✅ **Successful build** - ✓ BUILD SUCCESS
 
 ---
 
-**Próximos pasos opcionales:**
-- Implementar auditoría de cambios en billeteras
-- Agregar transacciones entre billeteras
-- Crear excepciones para usuario (similar a WalletSecurityService)
-
+**Optional next steps:**
+- Implement change auditing for wallets
+- Add transactions between wallets
+- Create user exceptions (similar to WalletSecurityService)
