@@ -22,7 +22,7 @@ public class UserExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
                 .body(ApiResponse.error(
-                        "Hubo un problema al validar tus credenciales o tu sesión ha expirado. Por favor, intenta de nuevo.",
+                        "An error occurred while validating your credentials or your session has expired. Please try again.",
                         null
                 ));
     }

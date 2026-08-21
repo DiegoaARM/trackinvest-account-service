@@ -25,11 +25,6 @@ public class WalletJpaAdapter implements WalletRepositoryPort {
     }
 
     @Override
-    public boolean existsById(UUID id) {
-        return walletRepository.existsById(id);
-    }
-
-    @Override
     public boolean existsByNameAndUserId(String name, UUID userId) {
         return walletRepository.existsByNameAndUserId(name, userId);
     }
@@ -59,5 +54,10 @@ public class WalletJpaAdapter implements WalletRepositoryPort {
     @Override
     public long countByUserId(UUID userId) {
         return walletRepository.countByUser_Id(userId);
+    }
+
+    @Override
+    public boolean existsByIdAndUserId(UUID id, UUID userId) {
+        return walletRepository.existsByIdAndUserId(id, userId);
     }
 }

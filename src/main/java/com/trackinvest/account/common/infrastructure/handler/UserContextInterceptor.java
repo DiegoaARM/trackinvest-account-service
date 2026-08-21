@@ -1,8 +1,5 @@
 package com.trackinvest.account.common.infrastructure.handler;
 
-import com.trackinvest.account.user.application.ports.out.UserRepositoryPort;
-import com.trackinvest.account.user.domain.models.UserDomain;
-import com.trackinvest.account.user.infrastructure.adapter.out.persistence.persistence.UserJpaAdapter;
 import com.trackinvest.account.user.infrastructure.adapter.out.persistence.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -12,7 +9,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
-import com.trackinvest.account.user.domain.exception.business.UserNotFoundException;
 
 import java.util.Map;
 import java.util.UUID;
@@ -32,14 +28,15 @@ public class UserContextInterceptor implements HandlerInterceptor {
         if (authentication != null && authentication.getPrincipal() instanceof Jwt jwt) {
             String cognitoId = jwt.getSubject();
 
-            // computeIfAbsent: si no está en caché, busca en DB y guarda; si está, no consulta DB.
+            // computeIfAbsent: if not in cache, query DB and store; if present, skip DB query.
             UUID userId = idCache.computeIfAbsent(cognitoId, key ->
                     userRepository.findIdByCognitoId(key).orElse(null)
             );
 
-            if (userId != null) {
-                request.setAttribute("USER_ID", userId);
+            if (userId == null) {
+                throw new RuntimeException();
             }
+            request.setAttribute("USER_ID", userId);
         }
         return true;
     }

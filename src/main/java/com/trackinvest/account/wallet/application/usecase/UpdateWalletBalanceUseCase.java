@@ -1,7 +1,6 @@
 package com.trackinvest.account.wallet.application.usecase;
 
 import com.trackinvest.account.common.application.ports.out.EventPublisherPort;
-import com.trackinvest.account.common.domain.service.AuthorizationService;
 import com.trackinvest.account.wallet.application.ports.in.dto.GetWalletResponseDTO;
 import com.trackinvest.account.wallet.application.ports.in.dto.UpdateWalletBalanceRequestDTO;
 import com.trackinvest.account.wallet.application.ports.in.service.UpdateWalletBalancePort;
@@ -21,16 +20,15 @@ import java.util.UUID;
 public class UpdateWalletBalanceUseCase implements UpdateWalletBalancePort {
 
     private final WalletRepositoryPort walletRepository;
-    private final AuthorizationService authorizationService;
     private final EventPublisherPort eventPublisher;
 
     @Override
     @Transactional
     public GetWalletResponseDTO execute(UUID userId, UUID walletId, UpdateWalletBalanceRequestDTO request) {
+        validateRules(walletId, userId);
+
         WalletDomain wallet = walletRepository.findById(walletId)
                 .orElseThrow(WalletNotFoundException::new);
-
-        validateRules(userId, wallet);
 
         BigDecimal previousBalance = wallet.getBalance();
 
@@ -53,7 +51,9 @@ public class UpdateWalletBalanceUseCase implements UpdateWalletBalancePort {
         return GetWalletResponseDTO.fromDomain(savedWallet);
     }
 
-    private void validateRules(UUID userId, WalletDomain wallet) {
-        authorizationService.verifyOwner(wallet.getUser().getId(), userId, "wallet");
+    private void validateRules(UUID walletId, UUID userId) {
+        if (!walletRepository.existsByIdAndUserId(walletId, userId)) {
+            throw new WalletNotFoundException();
+        }
     }
 }

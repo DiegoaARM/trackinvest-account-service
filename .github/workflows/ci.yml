@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [ main, master, develop ]
 
-# Forzar los permisos correctos de identidad para evitar fallos de seguridad (403 Forbidden)
+# Force correct identity permissions to prevent security failures (403 Forbidden)
 permissions:
   id-token: write
   contents: read
@@ -35,7 +35,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Clave para que SonarCloud pueda analizar el historial de Git
+          fetch-depth: 0 # Required for SonarCloud to analyze Git history
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
@@ -44,7 +44,7 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      # Cachear los paquetes de SonarCloud para que el pipeline corra más rápido en los siguientes push
+      # Cache SonarCloud packages to speed up pipeline on subsequent pushes
       - name: Cache SonarCloud packages
         uses: actions/cache@v4
         with:
@@ -52,11 +52,11 @@ jobs:
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
 
-      # Compila, corre tests, JaCoCo genera el reporte y Maven se lo envía a SonarCloud
+      # Compiles, runs tests, JaCoCo generates report and Maven sends it to SonarCloud
       - name: Build, Test and Analyze
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Lo provee GitHub automáticamente
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}    # Mantener como variable por si el plugin la busca de fondo
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Provided automatically by GitHub
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}    # Keep as variable in case the plugin looks for it in background
 
           COGNITO_JWK_SET_URI: ${{ secrets.COGNITO_JWK_SET_URI }}
           COGNITO_ISSUER_URI: ${{ secrets.COGNITO_ISSUER_URI }}

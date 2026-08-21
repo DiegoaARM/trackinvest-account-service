@@ -18,10 +18,7 @@ import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
-//@RequiredArgsConstructor
 public class SecurityConfig {
-
-//    private final JwtFilter jwtFilter; // Tu nuevo filtro
 
     @Bean
     public CorsConfigurationSource cors() {
@@ -39,7 +36,7 @@ public class SecurityConfig {
     public SecurityFilterChain security(HttpSecurity http) throws Exception {
         http
                 .cors(c -> c.configurationSource(cors()))
-                .csrf(c -> c.disable()) // CSRF desactivado porque usamos JWT stateless
+                .csrf(c -> c.disable()) // CSRF disabled because we use stateless JWT
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**", "/public/**",
