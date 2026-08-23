@@ -37,17 +37,7 @@ class DeleteWalletUseCaseTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenWalletNotFound() {
-        when(walletRepository.existsByIdAndUserId(walletId, userId)).thenReturn(false);
-
-        assertThrows(WalletNotFoundException.class, () ->
-                deleteWalletUseCase.execute(userId, walletId));
-
-        verify(walletRepository, never()).delete(any());
-    }
-
-    @Test
-    void shouldThrowExceptionWhenWalletDoesNotBelongToUser() {
+    void shouldThrowExceptionWhenWalletIsNotFoundOrNotOwnedByUser() {
         when(walletRepository.existsByIdAndUserId(walletId, userId)).thenReturn(false);
 
         assertThrows(WalletNotFoundException.class, () ->

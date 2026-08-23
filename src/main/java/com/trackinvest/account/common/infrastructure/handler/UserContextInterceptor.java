@@ -1,5 +1,6 @@
 package com.trackinvest.account.common.infrastructure.handler;
 
+import com.trackinvest.account.common.domain.exception.UserContextException;
 import com.trackinvest.account.user.infrastructure.adapter.out.persistence.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -34,7 +35,7 @@ public class UserContextInterceptor implements HandlerInterceptor {
             );
 
             if (userId == null) {
-                throw new RuntimeException();
+                throw new UserContextException(cognitoId);
             }
             request.setAttribute("USER_ID", userId);
         }

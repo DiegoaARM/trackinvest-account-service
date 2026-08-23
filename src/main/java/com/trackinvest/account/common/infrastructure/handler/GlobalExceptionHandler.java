@@ -3,9 +3,9 @@ package com.trackinvest.account.common.infrastructure.handler;
 import com.trackinvest.account.common.application.dto.ApiResponse;
 import com.trackinvest.account.common.domain.exception.TrackinvestException;
 import com.trackinvest.account.common.domain.exception.RequiredAttributeException;
+import com.trackinvest.account.common.domain.exception.UserContextException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +24,17 @@ public class GlobalExceptionHandler {
     }
 
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
+    @ExceptionHandler(UserContextException.class)
+    public ResponseEntity<ApiResponse<Void>> handleUserContext(UserContextException ex) {
+        log.error("Authenticated principal could not be resolved: {}", ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(ApiResponse.error(
+                        "Your session could not be validated. Please sign in again.",
+                        null
+                ));
+    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Void>> handleAnyError(Exception ex) {
