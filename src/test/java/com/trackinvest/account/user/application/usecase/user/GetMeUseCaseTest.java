@@ -37,8 +37,8 @@ class GetMeUseCaseTest {
         assertNotNull(response);
         assertEquals(userId, response.id());
         assertEquals("cognito-123", response.cognitoId());
-        assertEquals("Test User", response.email());
-        assertEquals("test@email.com", response.fullname());
+        assertEquals("Test User", response.fullname());
+        assertEquals("test@email.com", response.email());
     }
 
     @Test

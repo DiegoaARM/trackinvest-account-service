@@ -14,7 +14,7 @@ public class RefreshTokenUseCase implements RefreshTokenPort {
 
     @Override
     public TokenDTO execute(String refreshToken) {
-        // 1. Llamamos al adaptador para obtener nuevos tokens
+        // Call the adapter to obtain new tokens
         TokenDTO response = identityProvider.refreshTokens(refreshToken);
 
         return response;

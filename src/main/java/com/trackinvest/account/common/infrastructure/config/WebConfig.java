@@ -16,8 +16,6 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        // Asegúrate de que el path coincida con tus controladores
-        // Si tus endpoints empiezan con /wallets, usa "/wallets/**" o "/api/**"
         registry.addInterceptor(userContextInterceptor)
                 .addPathPatterns("/**");
     }

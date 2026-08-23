@@ -12,7 +12,7 @@ import java.util.UUID;
 public interface UserRepository extends JpaRepository<UserEntity, UUID> {
 
     @EntityGraph(attributePaths = {"walletsList"})
-    @Query("SELECT u FROM UserEntity u WHERE u.id = :id")// Carga las wallets en la misma consulta SQL
+    @Query("SELECT u FROM UserEntity u WHERE u.id = :id") // Loads wallets in the same SQL query
     Optional<UserEntity> findByIdWithWallets(UUID id);
 
     @Query("SELECT u.id FROM UserEntity u WHERE u.cognitoId = :cognitoId")

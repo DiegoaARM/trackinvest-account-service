@@ -58,21 +58,21 @@ public class CognitoAuthAdapter implements IdentityProviderPort {
                     .POST(HttpRequest.BodyPublishers.noBody())
                     .build();
         } catch (URISyntaxException e) {
-            throw new AuthenticationException("Error al estructurar la petición de autenticación interna", e);
+            throw new AuthenticationException("Failed to structure the internal authentication request", e);
         }
 
         HttpResponse<String> response;
         try (HttpClient client = HttpClient.newHttpClient()) {
             response = client.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (IOException e) {
-            throw new AuthenticationException("Error de comunicación de red con el proveedor de identidad", e);
+            throw new AuthenticationException("Network communication error with the identity provider", e);
         } catch (InterruptedException e) {
-            Thread.currentThread().interrupt(); // Buena práctica obligatoria en Java al capturar InterruptedException
-            throw new AuthenticationException("La solicitud de autenticación fue interrumpida", e);
+            Thread.currentThread().interrupt();
+            throw new AuthenticationException("The authentication request was interrupted", e);
         }
 
         if(response.statusCode() != 200) {
-            throw new AuthenticationException("No se pudo validar el código de autorización. Proveedor respondió: " + response.statusCode());
+            throw new AuthenticationException("Failed to validate the authorization code. Provider responded with: " + response.statusCode());
         }
 
         return MAPPER.readValue(response.body(), TokenDTO.class);
@@ -102,16 +102,16 @@ public class CognitoAuthAdapter implements IdentityProviderPort {
             }
 
             if (response.statusCode() != 200) {
-                throw new AuthenticationException("No se pudo renovar la sesión del usuario. Estado: " + response.statusCode());
+                throw new AuthenticationException("Failed to refresh user session. Status: " + response.statusCode());
             }
 
             return MAPPER.readValue(response.body(), TokenDTO.class);
 
         } catch (URISyntaxException | IOException e) {
-            throw new AuthenticationException("Error de infraestructura durante la renovación del token", e);
+            throw new AuthenticationException("Infrastructure error during token refresh", e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new AuthenticationException("La renovación del token fue interrumpida", e);
+            throw new AuthenticationException("Token refresh was interrupted", e);
         }
     }
 }
