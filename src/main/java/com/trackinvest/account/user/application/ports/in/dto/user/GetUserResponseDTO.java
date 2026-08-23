@@ -14,8 +14,8 @@ public record GetUserResponseDTO(
         return new GetUserResponseDTO(
                 user.getId(),
                 user.getCognitoId(),
-                user.getEmail(),
-                user.getFullname()
+                user.getFullname(),
+                user.getEmail()
         );
     }
 }

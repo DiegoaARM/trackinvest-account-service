@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @OpenAPIDefinition(
         info = @Info(title = "InverTrack API", version = "v1"),
-        security = @SecurityRequirement(name = "bearerAuth") // Aplica seguridad a todos los endpoints
+        security = @SecurityRequirement(name = "bearerAuth") // Applies security to all endpoints
 )
 @SecurityScheme(
         name = "bearerAuth",

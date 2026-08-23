@@ -1,6 +1,5 @@
 package com.trackinvest.account.wallet.application.usecase;
 
-import com.trackinvest.account.common.domain.service.AuthorizationService;
 import com.trackinvest.account.wallet.application.ports.in.dto.GetWalletResponseDTO;
 import com.trackinvest.account.wallet.application.ports.in.dto.UpdateWalletRequestDTO;
 import com.trackinvest.account.wallet.application.ports.in.service.UpdateWalletPort;
@@ -19,11 +18,11 @@ import java.util.UUID;
 public class UpdateWalletUseCase implements UpdateWalletPort {
 
     private final WalletRepositoryPort walletRepository;
-    private final AuthorizationService authorizationService;
 
     @Override
     @Transactional
     public GetWalletResponseDTO execute(UUID userId, UUID walletId, UpdateWalletRequestDTO request) {
+        validateOwnership(walletId, userId);
 
         WalletDomain wallet = walletRepository.findById(walletId)
                 .orElseThrow(WalletNotFoundException::new);
@@ -35,9 +34,13 @@ public class UpdateWalletUseCase implements UpdateWalletPort {
         return GetWalletResponseDTO.fromDomain(savedWallet);
     }
 
-    private void validateRules(UUID userId, WalletDomain wallet, UpdateWalletRequestDTO request) {
-        authorizationService.verifyOwner(wallet.getUser().getId(), userId, "wallet");
+    private void validateOwnership(UUID walletId, UUID userId) {
+        if (!walletRepository.existsByIdAndUserId(walletId, userId)) {
+            throw new WalletNotFoundException();
+        }
+    }
 
+    private void validateRules(UUID userId, WalletDomain wallet, UpdateWalletRequestDTO request) {
         if (request.name() != null
                 && !request.name().equals(wallet.getName())
                 && walletRepository.existsByNameAndUserId(request.name(), userId)) {

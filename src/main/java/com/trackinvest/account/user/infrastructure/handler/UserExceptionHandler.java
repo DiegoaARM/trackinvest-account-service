@@ -4,6 +4,8 @@ import com.trackinvest.account.common.application.dto.ApiResponse;
 import com.trackinvest.account.user.domain.exception.business.AuthenticationException;
 import com.trackinvest.account.user.domain.exception.business.UserNotFoundException;
 import com.trackinvest.account.user.domain.exception.format.UserNameInvalidException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -15,14 +17,16 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class UserExceptionHandler {
 
+    private static final Logger log = LoggerFactory.getLogger(UserExceptionHandler.class);
+
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ApiResponse<Void>> handleAuthentication(AuthenticationException ex) {
-        System.err.println("Auth Technical Fail: " + ex.getMessage());
+        log.error("Auth Technical Fail: {}", ex.getMessage(), ex);
 
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
                 .body(ApiResponse.error(
-                        "Hubo un problema al validar tus credenciales o tu sesión ha expirado. Por favor, intenta de nuevo.",
+                        "An error occurred while validating your credentials or your session has expired. Please try again.",
                         null
                 ));
     }

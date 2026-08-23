@@ -10,15 +10,6 @@ public interface UserEntityMapper {
 
     UserEntity toEntity(UserDomain domain);
 
-//    @AfterMapping
-//    default void linkWallets(UserDomain domain, @MappingTarget UserEntity.UserEntityBuilder userEntityBuilder) {
-//        UserEntity userEntity = userEntityBuilder.build();
-//
-//        if (userEntity.getWalletsList() != null) {
-//            userEntity.getWalletsList().forEach(wallet -> wallet.setUser(userEntity));
-//        }
-//    }
-
     default UserDomain toDomain(UserEntity entity) {
         if (entity == null) return null;
 
@@ -32,6 +23,4 @@ public interface UserEntityMapper {
                 //mapWallets(entity.getWalletsList())
         );
     }
-
-    //List<WalletDomain> mapWallets(List<WalletEntity> entities);
 }

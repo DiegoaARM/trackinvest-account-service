@@ -1,7 +1,5 @@
 package com.trackinvest.account.wallet.application.usecase;
 
-import com.trackinvest.account.common.domain.service.AuthorizationService;
-import com.trackinvest.account.user.domain.models.UserDomain;
 import com.trackinvest.account.wallet.application.ports.in.dto.UpdateWalletRequestDTO;
 import com.trackinvest.account.wallet.application.ports.out.WalletRepositoryPort;
 import com.trackinvest.account.wallet.domain.exception.format.WalletNameInvalidException;
@@ -28,9 +26,6 @@ class UpdateWalletUseCaseTestAdditionalTest {
     @Mock
     private WalletRepositoryPort walletRepository;
 
-    @Mock
-    private AuthorizationService authorizationService;
-
     @InjectMocks
     private UpdateWalletUseCase updateWalletUseCase;
 
@@ -38,16 +33,15 @@ class UpdateWalletUseCaseTestAdditionalTest {
     void shouldThrowWhenNameIsNull() {
         UUID userId = UUID.randomUUID();
         UUID walletId = UUID.randomUUID();
-        UserDomain user = UserDomain.create(userId);
         WalletDomain wallet = WalletDomain.from(
-                walletId, "Old Name", user, BigDecimal.valueOf(100),
+                walletId, "Old Name", null, BigDecimal.valueOf(100),
                 CurrencyTypeEnum.USD, LocalDateTime.now(), LocalDateTime.now()
         );
 
         UpdateWalletRequestDTO request = new UpdateWalletRequestDTO(null);
 
+        when(walletRepository.existsByIdAndUserId(walletId, userId)).thenReturn(true);
         when(walletRepository.findById(walletId)).thenReturn(Optional.of(wallet));
-        doNothing().when(authorizationService).verifyOwner(userId, userId, "wallet");
 
         assertThrows(WalletNameInvalidException.class, () ->
                 updateWalletUseCase.execute(userId, walletId, request));

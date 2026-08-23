@@ -12,8 +12,8 @@
 9. [Functional Modules](#9-functional-modules)
 10. [Business Logic Highlights](#10-business-logic-highlights)
 11. [Accounts & Wallets System](#11-accounts--wallets-system)
-12. [Account Reconciliation (Cruce)](#12-account-reconciliation-cruce)
-13. [Reversals (Anulaciones)](#13-reversals-anulaciones)
+12. [Account Reconciliation](#12-account-reconciliation-cruce)
+13. [Reversals](#13-reversals-anulaciones)
 14. [Guideline for New Implementations](#14-guideline-for-new-implementations)
 15. [API Endpoints & Swagger](#15-api-endpoints--swagger)
 16. [Code Conventions](#16-code-conventions)
@@ -137,7 +137,7 @@ Query operation (GET):
 ## 9. Functional Modules
 - Users: CRUD, types (client, provider, both), validations
 - Wallets: Credits, debits, sync, balance queries
-- Accounts (Carteras): Aggregated account state per user
+- Accounts (Wallets): Aggregated account state per user
 - Payments: Records of credits/debits, reversal support
 - Auth (external or upstream): JWT / Authorization service used by common.auth
 
@@ -160,7 +160,7 @@ Persistence considerations:
 - Use optimistic locking or versioning if concurrent updates are expected
 
 ## 12. Account Reconciliation (Cruce)
-- Reconciliation between accounts (clients/proveedores) should be implemented as a use-case that:
+- Reconciliation between accounts (clients/providers) should be implemented as a use-case that:
   1) receives two user identifiers and amounts
   2) validates balances and permissions
   3) creates offsetting transactions in both wallets

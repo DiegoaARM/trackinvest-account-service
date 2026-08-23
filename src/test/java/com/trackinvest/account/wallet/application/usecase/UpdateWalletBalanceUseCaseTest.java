@@ -1,9 +1,6 @@
 package com.trackinvest.account.wallet.application.usecase;
 
 import com.trackinvest.account.common.application.ports.out.EventPublisherPort;
-import com.trackinvest.account.common.domain.exception.ResourceAccessDeniedException;
-import com.trackinvest.account.common.domain.service.AuthorizationService;
-import com.trackinvest.account.user.domain.models.UserDomain;
 import com.trackinvest.account.wallet.application.ports.in.dto.GetWalletResponseDTO;
 import com.trackinvest.account.wallet.application.ports.in.dto.UpdateWalletBalanceRequestDTO;
 import com.trackinvest.account.wallet.application.ports.out.WalletRepositoryPort;
@@ -34,9 +31,6 @@ class UpdateWalletBalanceUseCaseTest {
     private WalletRepositoryPort walletRepository;
 
     @Mock
-    private AuthorizationService authorizationService;
-
-    @Mock
     private EventPublisherPort eventPublisher;
 
     @InjectMocks
@@ -47,16 +41,15 @@ class UpdateWalletBalanceUseCaseTest {
 
     @Test
     void shouldDepositSuccessfully() {
-        UserDomain user = UserDomain.create(userId);
         WalletDomain wallet = WalletDomain.from(
-                walletId, "My Wallet", user, BigDecimal.valueOf(100),
+                walletId, "My Wallet", null, BigDecimal.valueOf(100),
                 CurrencyTypeEnum.USD, LocalDateTime.now(), LocalDateTime.now()
         );
 
         UpdateWalletBalanceRequestDTO request = new UpdateWalletBalanceRequestDTO(BigDecimal.valueOf(50), true);
 
+        when(walletRepository.existsByIdAndUserId(walletId, userId)).thenReturn(true);
         when(walletRepository.findById(walletId)).thenReturn(Optional.of(wallet));
-        doNothing().when(authorizationService).verifyOwner(userId, userId, "wallet");
         when(walletRepository.save(any(WalletDomain.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         GetWalletResponseDTO response = updateWalletBalanceUseCase.execute(userId, walletId, request);
@@ -66,16 +59,15 @@ class UpdateWalletBalanceUseCaseTest {
 
     @Test
     void shouldWithdrawSuccessfully() {
-        UserDomain user = UserDomain.create(userId);
         WalletDomain wallet = WalletDomain.from(
-                walletId, "My Wallet", user, BigDecimal.valueOf(100),
+                walletId, "My Wallet", null, BigDecimal.valueOf(100),
                 CurrencyTypeEnum.USD, LocalDateTime.now(), LocalDateTime.now()
         );
 
         UpdateWalletBalanceRequestDTO request = new UpdateWalletBalanceRequestDTO(BigDecimal.valueOf(30), false);
 
+        when(walletRepository.existsByIdAndUserId(walletId, userId)).thenReturn(true);
         when(walletRepository.findById(walletId)).thenReturn(Optional.of(wallet));
-        doNothing().when(authorizationService).verifyOwner(userId, userId, "wallet");
         when(walletRepository.save(any(WalletDomain.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         GetWalletResponseDTO response = updateWalletBalanceUseCase.execute(userId, walletId, request);
@@ -85,6 +77,7 @@ class UpdateWalletBalanceUseCaseTest {
 
     @Test
     void shouldThrowExceptionWhenWalletNotFound() {
+        when(walletRepository.existsByIdAndUserId(walletId, userId)).thenReturn(true);
         when(walletRepository.findById(walletId)).thenReturn(Optional.empty());
 
         UpdateWalletBalanceRequestDTO request = new UpdateWalletBalanceRequestDTO(BigDecimal.valueOf(50), true);
@@ -97,16 +90,15 @@ class UpdateWalletBalanceUseCaseTest {
 
     @Test
     void shouldThrowExceptionWhenInsufficientBalanceForWithdrawal() {
-        UserDomain user = UserDomain.create(userId);
         WalletDomain wallet = WalletDomain.from(
-                walletId, "My Wallet", user, BigDecimal.valueOf(10),
+                walletId, "My Wallet", null, BigDecimal.valueOf(10),
                 CurrencyTypeEnum.USD, LocalDateTime.now(), LocalDateTime.now()
         );
 
         UpdateWalletBalanceRequestDTO request = new UpdateWalletBalanceRequestDTO(BigDecimal.valueOf(50), false);
 
+        when(walletRepository.existsByIdAndUserId(walletId, userId)).thenReturn(true);
         when(walletRepository.findById(walletId)).thenReturn(Optional.of(wallet));
-        doNothing().when(authorizationService).verifyOwner(userId, userId, "wallet");
 
         assertThrows(WalletInsufficientBalanceException.class, () ->
                 updateWalletBalanceUseCase.execute(userId, walletId, request));
@@ -115,21 +107,12 @@ class UpdateWalletBalanceUseCaseTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenUserIsNotOwner() {
-        UUID otherUserId = UUID.randomUUID();
-        UserDomain otherUser = UserDomain.create(otherUserId);
-        WalletDomain wallet = WalletDomain.from(
-                walletId, "My Wallet", otherUser, BigDecimal.valueOf(100),
-                CurrencyTypeEnum.USD, LocalDateTime.now(), LocalDateTime.now()
-        );
+    void shouldThrowExceptionWhenWalletDoesNotBelongToUser() {
+        when(walletRepository.existsByIdAndUserId(walletId, userId)).thenReturn(false);
 
         UpdateWalletBalanceRequestDTO request = new UpdateWalletBalanceRequestDTO(BigDecimal.valueOf(50), true);
 
-        when(walletRepository.findById(walletId)).thenReturn(Optional.of(wallet));
-        doThrow(new ResourceAccessDeniedException("wallet"))
-                .when(authorizationService).verifyOwner(otherUserId, userId, "wallet");
-
-        assertThrows(ResourceAccessDeniedException.class, () ->
+        assertThrows(WalletNotFoundException.class, () ->
                 updateWalletBalanceUseCase.execute(userId, walletId, request));
 
         verify(walletRepository, never()).save(any());
@@ -137,16 +120,15 @@ class UpdateWalletBalanceUseCaseTest {
 
     @Test
     void shouldThrowExceptionWhenAmountIsInvalid() {
-        UserDomain user = UserDomain.create(userId);
         WalletDomain wallet = WalletDomain.from(
-                walletId, "My Wallet", user, BigDecimal.valueOf(100),
+                walletId, "My Wallet", null, BigDecimal.valueOf(100),
                 CurrencyTypeEnum.USD, LocalDateTime.now(), LocalDateTime.now()
         );
 
         UpdateWalletBalanceRequestDTO request = new UpdateWalletBalanceRequestDTO(BigDecimal.valueOf(-5), true);
 
+        when(walletRepository.existsByIdAndUserId(walletId, userId)).thenReturn(true);
         when(walletRepository.findById(walletId)).thenReturn(Optional.of(wallet));
-        doNothing().when(authorizationService).verifyOwner(userId, userId, "wallet");
 
         assertThrows(WalletAmountInvalidException.class, () ->
                 updateWalletBalanceUseCase.execute(userId, walletId, request));
