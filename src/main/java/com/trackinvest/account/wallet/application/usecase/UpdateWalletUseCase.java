@@ -22,9 +22,7 @@ public class UpdateWalletUseCase implements UpdateWalletPort {
     @Override
     @Transactional
     public GetWalletResponseDTO execute(UUID userId, UUID walletId, UpdateWalletRequestDTO request) {
-        validateOwnership(walletId, userId);
-
-        WalletDomain wallet = walletRepository.findById(walletId)
+        WalletDomain wallet = walletRepository.findByIdAndUserId(walletId, userId)
                 .orElseThrow(WalletNotFoundException::new);
 
         validateRules(userId, wallet, request);
@@ -32,12 +30,6 @@ public class UpdateWalletUseCase implements UpdateWalletPort {
 
         WalletDomain savedWallet = walletRepository.save(wallet);
         return GetWalletResponseDTO.fromDomain(savedWallet);
-    }
-
-    private void validateOwnership(UUID walletId, UUID userId) {
-        if (!walletRepository.existsByIdAndUserId(walletId, userId)) {
-            throw new WalletNotFoundException();
-        }
     }
 
     private void validateRules(UUID userId, WalletDomain wallet, UpdateWalletRequestDTO request) {

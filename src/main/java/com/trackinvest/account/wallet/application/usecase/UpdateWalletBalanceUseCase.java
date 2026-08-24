@@ -25,9 +25,7 @@ public class UpdateWalletBalanceUseCase implements UpdateWalletBalancePort {
     @Override
     @Transactional
     public GetWalletResponseDTO execute(UUID userId, UUID walletId, UpdateWalletBalanceRequestDTO request) {
-        validateRules(walletId, userId);
-
-        WalletDomain wallet = walletRepository.findById(walletId)
+        WalletDomain wallet = walletRepository.findByIdAndUserId(walletId, userId)
                 .orElseThrow(WalletNotFoundException::new);
 
         BigDecimal previousBalance = wallet.getBalance();
@@ -49,11 +47,5 @@ public class UpdateWalletBalanceUseCase implements UpdateWalletBalancePort {
         ));
 
         return GetWalletResponseDTO.fromDomain(savedWallet);
-    }
-
-    private void validateRules(UUID walletId, UUID userId) {
-        if (!walletRepository.existsByIdAndUserId(walletId, userId)) {
-            throw new WalletNotFoundException();
-        }
     }
 }

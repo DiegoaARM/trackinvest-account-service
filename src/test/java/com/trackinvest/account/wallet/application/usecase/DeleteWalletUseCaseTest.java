@@ -33,7 +33,7 @@ class DeleteWalletUseCaseTest {
 
         deleteWalletUseCase.execute(userId, walletId);
 
-        verify(walletRepository).delete(walletId);
+        verify(walletRepository).deleteByIdAndUserId(walletId, userId);
     }
 
     @Test
@@ -43,7 +43,7 @@ class DeleteWalletUseCaseTest {
         assertThrows(WalletNotFoundException.class, () ->
                 deleteWalletUseCase.execute(userId, walletId));
 
-        verify(walletRepository, never()).delete(any());
+        verify(walletRepository, never()).deleteByIdAndUserId(any(), any());
     }
 
     @Test
@@ -54,6 +54,6 @@ class DeleteWalletUseCaseTest {
         assertThrows(WalletCannotDeleteLastException.class, () ->
                 deleteWalletUseCase.execute(userId, walletId));
 
-        verify(walletRepository, never()).delete(any());
+        verify(walletRepository, never()).deleteByIdAndUserId(any(), any());
     }
 }
