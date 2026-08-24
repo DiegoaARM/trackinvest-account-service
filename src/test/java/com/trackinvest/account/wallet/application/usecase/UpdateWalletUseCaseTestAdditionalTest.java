@@ -40,8 +40,7 @@ class UpdateWalletUseCaseTestAdditionalTest {
 
         UpdateWalletRequestDTO request = new UpdateWalletRequestDTO(null);
 
-        when(walletRepository.existsByIdAndUserId(walletId, userId)).thenReturn(true);
-        when(walletRepository.findById(walletId)).thenReturn(Optional.of(wallet));
+        when(walletRepository.findByIdAndUserId(walletId, userId)).thenReturn(Optional.of(wallet));
 
         assertThrows(WalletNameInvalidException.class, () ->
                 updateWalletUseCase.execute(userId, walletId, request));

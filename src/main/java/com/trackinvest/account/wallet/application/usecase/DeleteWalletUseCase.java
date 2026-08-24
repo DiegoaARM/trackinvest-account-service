@@ -19,14 +19,14 @@ public class DeleteWalletUseCase implements DeleteWalletPort {
     @Override
     @Transactional
     public void execute(UUID userId, UUID walletId) {
-        validateRules(userId, walletId);
-        walletRepository.delete(walletId);
-    }
-
-    private void validateRules(UUID userId, UUID walletId) {
         if (!walletRepository.existsByIdAndUserId(walletId, userId)) {
             throw new WalletNotFoundException();
         }
+        validateRules(userId);
+        walletRepository.deleteByIdAndUserId(walletId, userId);
+    }
+
+    private void validateRules(UUID userId) {
         if (walletRepository.countByUserId(userId) <= 1) {
             throw new WalletCannotDeleteLastException();
         }

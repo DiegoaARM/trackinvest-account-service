@@ -7,10 +7,12 @@ import com.trackinvest.account.wallet.application.ports.out.WalletRepositoryPort
 import com.trackinvest.account.wallet.domain.exception.business.WalletInsufficientBalanceException;
 import com.trackinvest.account.wallet.domain.exception.business.WalletNotFoundException;
 import com.trackinvest.account.wallet.domain.exception.format.WalletAmountInvalidException;
+import com.trackinvest.account.wallet.domain.event.WalletBalanceUpdatedEvent;
 import com.trackinvest.account.wallet.domain.models.WalletDomain;
 import com.trackinvest.account.wallet.domain.models.valueobjects.CurrencyTypeEnum;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -48,13 +50,13 @@ class UpdateWalletBalanceUseCaseTest {
 
         UpdateWalletBalanceRequestDTO request = new UpdateWalletBalanceRequestDTO(BigDecimal.valueOf(50), true);
 
-        when(walletRepository.existsByIdAndUserId(walletId, userId)).thenReturn(true);
-        when(walletRepository.findById(walletId)).thenReturn(Optional.of(wallet));
+        when(walletRepository.findByIdAndUserId(walletId, userId)).thenReturn(Optional.of(wallet));
         when(walletRepository.save(any(WalletDomain.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         GetWalletResponseDTO response = updateWalletBalanceUseCase.execute(userId, walletId, request);
 
         assertEquals(BigDecimal.valueOf(150), response.balance());
+        assertPublishedEvent(BigDecimal.valueOf(100), BigDecimal.valueOf(150));
     }
 
     @Test
@@ -66,19 +68,29 @@ class UpdateWalletBalanceUseCaseTest {
 
         UpdateWalletBalanceRequestDTO request = new UpdateWalletBalanceRequestDTO(BigDecimal.valueOf(30), false);
 
-        when(walletRepository.existsByIdAndUserId(walletId, userId)).thenReturn(true);
-        when(walletRepository.findById(walletId)).thenReturn(Optional.of(wallet));
+        when(walletRepository.findByIdAndUserId(walletId, userId)).thenReturn(Optional.of(wallet));
         when(walletRepository.save(any(WalletDomain.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         GetWalletResponseDTO response = updateWalletBalanceUseCase.execute(userId, walletId, request);
 
         assertEquals(BigDecimal.valueOf(70), response.balance());
+        assertPublishedEvent(BigDecimal.valueOf(100), BigDecimal.valueOf(70));
+    }
+
+    private void assertPublishedEvent(BigDecimal expectedPreviousBalance, BigDecimal expectedNewBalance) {
+        ArgumentCaptor<WalletBalanceUpdatedEvent> captor = ArgumentCaptor.forClass(WalletBalanceUpdatedEvent.class);
+        verify(eventPublisher).publish(captor.capture());
+
+        WalletBalanceUpdatedEvent event = captor.getValue();
+        assertEquals(userId.toString(), event.getUserId());
+        assertEquals(expectedPreviousBalance, event.getPreviousBalance());
+        assertEquals(expectedNewBalance, event.getNewBalance());
+        assertEquals(CurrencyTypeEnum.USD.name(), event.getCurrency());
     }
 
     @Test
-    void shouldThrowExceptionWhenWalletNotFound() {
-        when(walletRepository.existsByIdAndUserId(walletId, userId)).thenReturn(true);
-        when(walletRepository.findById(walletId)).thenReturn(Optional.empty());
+    void shouldThrowExceptionWhenWalletIsNotFoundOrNotOwnedByUser() {
+        when(walletRepository.findByIdAndUserId(walletId, userId)).thenReturn(Optional.empty());
 
         UpdateWalletBalanceRequestDTO request = new UpdateWalletBalanceRequestDTO(BigDecimal.valueOf(50), true);
 
@@ -86,6 +98,7 @@ class UpdateWalletBalanceUseCaseTest {
                 updateWalletBalanceUseCase.execute(userId, walletId, request));
 
         verify(walletRepository, never()).save(any());
+        verify(eventPublisher, never()).publish(any());
     }
 
     @Test
@@ -97,25 +110,13 @@ class UpdateWalletBalanceUseCaseTest {
 
         UpdateWalletBalanceRequestDTO request = new UpdateWalletBalanceRequestDTO(BigDecimal.valueOf(50), false);
 
-        when(walletRepository.existsByIdAndUserId(walletId, userId)).thenReturn(true);
-        when(walletRepository.findById(walletId)).thenReturn(Optional.of(wallet));
+        when(walletRepository.findByIdAndUserId(walletId, userId)).thenReturn(Optional.of(wallet));
 
         assertThrows(WalletInsufficientBalanceException.class, () ->
                 updateWalletBalanceUseCase.execute(userId, walletId, request));
 
         verify(walletRepository, never()).save(any());
-    }
-
-    @Test
-    void shouldThrowExceptionWhenWalletDoesNotBelongToUser() {
-        when(walletRepository.existsByIdAndUserId(walletId, userId)).thenReturn(false);
-
-        UpdateWalletBalanceRequestDTO request = new UpdateWalletBalanceRequestDTO(BigDecimal.valueOf(50), true);
-
-        assertThrows(WalletNotFoundException.class, () ->
-                updateWalletBalanceUseCase.execute(userId, walletId, request));
-
-        verify(walletRepository, never()).save(any());
+        verify(eventPublisher, never()).publish(any());
     }
 
     @Test
@@ -127,12 +128,12 @@ class UpdateWalletBalanceUseCaseTest {
 
         UpdateWalletBalanceRequestDTO request = new UpdateWalletBalanceRequestDTO(BigDecimal.valueOf(-5), true);
 
-        when(walletRepository.existsByIdAndUserId(walletId, userId)).thenReturn(true);
-        when(walletRepository.findById(walletId)).thenReturn(Optional.of(wallet));
+        when(walletRepository.findByIdAndUserId(walletId, userId)).thenReturn(Optional.of(wallet));
 
         assertThrows(WalletAmountInvalidException.class, () ->
                 updateWalletBalanceUseCase.execute(userId, walletId, request));
 
         verify(walletRepository, never()).save(any());
+        verify(eventPublisher, never()).publish(any());
     }
 }

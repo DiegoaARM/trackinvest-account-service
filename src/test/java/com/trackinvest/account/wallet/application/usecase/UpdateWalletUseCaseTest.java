@@ -44,8 +44,7 @@ class UpdateWalletUseCaseTest {
 
         UpdateWalletRequestDTO request = new UpdateWalletRequestDTO("New Name");
 
-        when(walletRepository.existsByIdAndUserId(walletId, userId)).thenReturn(true);
-        when(walletRepository.findById(walletId)).thenReturn(Optional.of(wallet));
+        when(walletRepository.findByIdAndUserId(walletId, userId)).thenReturn(Optional.of(wallet));
         when(walletRepository.existsByNameAndUserId(request.name(), userId)).thenReturn(false);
         when(walletRepository.save(any(WalletDomain.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
@@ -56,9 +55,8 @@ class UpdateWalletUseCaseTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenWalletNotFound() {
-        when(walletRepository.existsByIdAndUserId(walletId, userId)).thenReturn(true);
-        when(walletRepository.findById(walletId)).thenReturn(Optional.empty());
+    void shouldThrowExceptionWhenWalletIsNotFoundOrNotOwnedByUser() {
+        when(walletRepository.findByIdAndUserId(walletId, userId)).thenReturn(Optional.empty());
 
         UpdateWalletRequestDTO request = new UpdateWalletRequestDTO("New Name");
 
@@ -75,10 +73,9 @@ class UpdateWalletUseCaseTest {
                 CurrencyTypeEnum.USD, LocalDateTime.now(), LocalDateTime.now()
         );
 
-        when(walletRepository.existsByIdAndUserId(walletId, userId)).thenReturn(true);
-        when(walletRepository.findById(walletId)).thenReturn(Optional.of(wallet));
-
         UpdateWalletRequestDTO request = new UpdateWalletRequestDTO("AB");
+
+        when(walletRepository.findByIdAndUserId(walletId, userId)).thenReturn(Optional.of(wallet));
 
         assertThrows(WalletNameInvalidException.class, () ->
                 updateWalletUseCase.execute(userId, walletId, request));
@@ -95,8 +92,7 @@ class UpdateWalletUseCaseTest {
 
         UpdateWalletRequestDTO request = new UpdateWalletRequestDTO("Existing Name");
 
-        when(walletRepository.existsByIdAndUserId(walletId, userId)).thenReturn(true);
-        when(walletRepository.findById(walletId)).thenReturn(Optional.of(wallet));
+        when(walletRepository.findByIdAndUserId(walletId, userId)).thenReturn(Optional.of(wallet));
         when(walletRepository.existsByNameAndUserId(request.name(), userId)).thenReturn(true);
 
         assertThrows(WalletNameDuplicateException.class, () ->
@@ -114,8 +110,7 @@ class UpdateWalletUseCaseTest {
 
         UpdateWalletRequestDTO request = new UpdateWalletRequestDTO("Same Name");
 
-        when(walletRepository.existsByIdAndUserId(walletId, userId)).thenReturn(true);
-        when(walletRepository.findById(walletId)).thenReturn(Optional.of(wallet));
+        when(walletRepository.findByIdAndUserId(walletId, userId)).thenReturn(Optional.of(wallet));
         when(walletRepository.save(any(WalletDomain.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         GetWalletResponseDTO response = updateWalletUseCase.execute(userId, walletId, request);
@@ -123,17 +118,5 @@ class UpdateWalletUseCaseTest {
         assertEquals("Same Name", response.name());
         verify(walletRepository, never()).existsByNameAndUserId(any(), any());
         verify(walletRepository).save(wallet);
-    }
-
-    @Test
-    void shouldThrowExceptionWhenWalletDoesNotBelongToUser() {
-        when(walletRepository.existsByIdAndUserId(walletId, userId)).thenReturn(false);
-
-        UpdateWalletRequestDTO request = new UpdateWalletRequestDTO("New Name");
-
-        assertThrows(WalletNotFoundException.class, () ->
-                updateWalletUseCase.execute(userId, walletId, request));
-
-        verify(walletRepository, never()).save(any());
     }
 }

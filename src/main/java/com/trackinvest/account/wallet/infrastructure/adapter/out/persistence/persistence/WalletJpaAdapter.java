@@ -19,8 +19,8 @@ public class WalletJpaAdapter implements WalletRepositoryPort {
     private final WalletEntityMapper walletEntityMapper;
 
     @Override
-    public Optional<WalletDomain> findById(UUID id) {
-        return walletRepository.findById(id)
+    public Optional<WalletDomain> findByIdAndUserId(UUID id, UUID userId) {
+        return walletRepository.findByIdAndUser_Id(id, userId)
                 .map(walletEntityMapper::toDomain);
     }
 
@@ -39,8 +39,8 @@ public class WalletJpaAdapter implements WalletRepositoryPort {
     }
 
     @Override
-    public void delete(UUID id) {
-        walletRepository.deleteById(id);
+    public void deleteByIdAndUserId(UUID id, UUID userId) {
+        walletRepository.deleteByIdAndUser_Id(id, userId);
     }
 
     @Override
