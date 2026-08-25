@@ -213,7 +213,7 @@ http://localhost:8080/swagger-ui/index.html
 The OpenAPI specification is auto-generated and exposes all REST endpoints for the `user` and `wallet` modules. Detailed example requests and responses can be found in:
 
 - [EJEMPLOS_API.md](./EJEMPLOS_API.md)
-- [DocumentacionSwagger.md](./DocumentacionSwagger.md)
+- [DocumentacionSwagger.md](docs/swagger_documentation.md)
 
 ---
 
@@ -260,12 +260,12 @@ http://localhost:8080/actuator/prometheus
 
 | Document                                                   | Description                                |
 |------------------------------------------------------------|--------------------------------------------|
-| [IMPLEMENTING_A_NEW_MODULE.md](./IMPLEMENTING_A_NEW_MODULE.md) | Guide for adding a new bounded context     |
-| [IMPLEMENTACION_USUARIOS_BILLETERAS.md](./IMPLEMENTACION_USUARIOS_BILLETERAS.md) | User & wallet implementation details       |
-| [DocumentacionCognito.md](./DocumentacionCognito.md)       | AWS Cognito integration reference          |
-| [DocumentacionSwagger.md](./DocumentacionSwagger.md)       | Swagger/OpenAPI documentation              |
+| [IMPLEMENTING_A_NEW_MODULE.md](docs/implementing_new_module.md) | Guide for adding a new bounded context     |
+| [IMPLEMENTACION_USUARIOS_BILLETERAS.md](docs/trackinvest_account_service_documentation.md) | User & wallet implementation details       |
+| [DocumentacionCognito.md](docs/cognito_documentation.md)       | AWS Cognito integration reference          |
+| [DocumentacionSwagger.md](docs/swagger_documentation.md)       | Swagger/OpenAPI documentation              |
 | [EJEMPLOS_API.md](./EJEMPLOS_API.md)                       | API request/response examples              |
-| [TRACKINVEST_DOCUMENTATION.md](./TRACKINVEST_DOCUMENTATION.md) | General project documentation              |
+| [TRACKINVEST_DOCUMENTATION.md](docs/trackinvest_documentation.md) | General project documentation              |
 
 ---
 
