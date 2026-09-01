@@ -9,17 +9,7 @@ public interface UserRepositoryPort {
 
     Optional<UserDomain> findById(UUID id);
 
-    boolean existsById(UUID id);
-
-    Optional<UserDomain> findByIdWithWallets(UUID id);
-
-    Optional<UserDomain> findByEmail(String email);
-
-    Optional<UserDomain> findByCognitoId(String cognitoId);
-
     UserDomain save(UserDomain user);
-
-    boolean existsByEmail(String email);
 
     boolean existsByCognitoId(String cognitoId);
 }

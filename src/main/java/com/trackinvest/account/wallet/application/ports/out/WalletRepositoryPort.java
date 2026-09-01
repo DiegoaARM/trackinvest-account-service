@@ -8,10 +8,10 @@ import java.util.UUID;
 
 public interface WalletRepositoryPort {
 
-    Optional<WalletDomain> findById(UUID id);
+    Optional<WalletDomain> findByIdAndUserId(UUID id, UUID userId);
     boolean existsByNameAndUserId(String name, UUID userId);
     WalletDomain save(WalletDomain wallet);
-    void delete(UUID id);
+    void deleteByIdAndUserId(UUID id, UUID userId);
     List<WalletDomain> findByUserId(UUID userId);
     long countByUserId(UUID userId);
     boolean existsByIdAndUserId(UUID id, UUID userId);

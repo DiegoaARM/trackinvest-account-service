@@ -1,7 +1,5 @@
 package com.trackinvest.account.wallet.application.usecase;
 
-import com.trackinvest.account.user.application.ports.out.UserRepositoryPort;
-import com.trackinvest.account.user.domain.exception.business.UserNotFoundException;
 import com.trackinvest.account.wallet.application.ports.in.dto.GetWalletResponseDTO;
 import com.trackinvest.account.wallet.application.ports.out.WalletRepositoryPort;
 import com.trackinvest.account.wallet.domain.models.WalletDomain;
@@ -26,9 +24,6 @@ class GetAllWalletsUseCaseTest {
     @Mock
     private WalletRepositoryPort walletRepository;
 
-    @Mock
-    private UserRepositoryPort userRepository;
-
     @InjectMocks
     private GetAllWalletsUseCase getAllWalletsUseCase;
 
@@ -45,7 +40,6 @@ class GetAllWalletsUseCaseTest {
                 CurrencyTypeEnum.EUR, LocalDateTime.now(), LocalDateTime.now()
         );
 
-        when(userRepository.existsById(userId)).thenReturn(true);
         when(walletRepository.findByUserId(userId)).thenReturn(List.of(wallet1, wallet2));
 
         List<GetWalletResponseDTO> result = getAllWalletsUseCase.execute(userId);
@@ -56,18 +50,7 @@ class GetAllWalletsUseCaseTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenUserNotFound() {
-        when(userRepository.existsById(userId)).thenReturn(false);
-
-        assertThrows(UserNotFoundException.class, () ->
-                getAllWalletsUseCase.execute(userId));
-
-        verify(walletRepository, never()).findByUserId(any());
-    }
-
-    @Test
     void shouldReturnEmptyListWhenUserHasNoWallets() {
-        when(userRepository.existsById(userId)).thenReturn(true);
         when(walletRepository.findByUserId(userId)).thenReturn(List.of());
 
         List<GetWalletResponseDTO> result = getAllWalletsUseCase.execute(userId);
