@@ -32,6 +32,25 @@ class BaseDomainEventTest {
         assertNotEquals(event1.getEventId(), event2.getEventId());
     }
 
+    @Test
+    void shouldHaveSchemaVersionOneByDefault() {
+        TestEvent event = new TestEvent("agg-1", "test.event");
+
+        assertEquals(BaseDomainEvent.SCHEMA_VERSION, event.getVersion());
+        assertEquals(1, event.getVersion());
+    }
+
+    @Test
+    void shouldAllowSettingCorrelationId() {
+        TestEvent event = new TestEvent("agg-1", "test.event");
+
+        assertNull(event.getCorrelationId());
+
+        event.setCorrelationId("corr-456");
+
+        assertEquals("corr-456", event.getCorrelationId());
+    }
+
     private static class TestEvent extends BaseDomainEvent {
         public TestEvent(String aggregateId, String eventType) {
             super(aggregateId, eventType);

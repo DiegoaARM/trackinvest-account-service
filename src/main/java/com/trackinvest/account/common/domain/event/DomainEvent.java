@@ -7,4 +7,8 @@ public interface DomainEvent {
     String getAggregateId();
     String getEventType();
     Instant getOccurredOn();
+
+    default String getCorrelationId() {
+        return null;
+    }
 }
