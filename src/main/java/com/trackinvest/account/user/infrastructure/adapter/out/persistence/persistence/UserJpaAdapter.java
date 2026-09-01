@@ -25,40 +25,12 @@ public class UserJpaAdapter implements UserRepositoryPort {
     }
 
     @Override
-    public boolean existsById(UUID id) {
-        return userRepository.existsById(id);
-    }
-
-    @Override
-    public Optional<UserDomain> findByIdWithWallets(UUID id) {
-        return userRepository.findByIdWithWallets(id)
-                .map(userEntityMapper::toDomain);
-    }
-
-    @Override
-    public Optional<UserDomain> findByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .map(userEntityMapper::toDomain);
-    }
-
-    @Override
-    public Optional<UserDomain> findByCognitoId(String congitoId) {
-        return userRepository.findByCognitoId(congitoId)
-                .map(userEntityMapper::toDomain);
-    }
-
-    @Override
     public UserDomain save(UserDomain user) {
         return userEntityMapper.toDomain(
                 userRepository.save(
                         userEntityMapper.toEntity(user)
                 )
         );
-    }
-
-    @Override
-    public boolean existsByEmail(String email) {
-        return userRepository.existsByEmail(email);
     }
 
     @Override
